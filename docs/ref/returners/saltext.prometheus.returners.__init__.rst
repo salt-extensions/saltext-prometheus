@@ -1,6 +1,6 @@
+﻿saltext.prometheus.returners.\_\_init\_\_
+=========================================
 
-saltext.prometheus.returners.__init__
-=====================================
+.. currentmodule:: saltext.prometheus.returners
 
-.. automodule:: saltext.prometheus.returners.__init__
-    :members:
+.. autodata:: __init__

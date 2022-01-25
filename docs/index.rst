@@ -1,5 +1,5 @@
-Welcome to prometheus Documentation!
-====================================
+Welcome to Prometheus Salt Extension Documentation!
+===================================================
 
 .. toctree::
   :maxdepth: 2

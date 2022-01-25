@@ -1,6 +1,6 @@
+﻿saltext.prometheus.engines.\_\_init\_\_
+=======================================
 
-saltext.prometheus.engines.__init__
-===================================
+.. currentmodule:: saltext.prometheus.engines
 
-.. automodule:: saltext.prometheus.engines.__init__
-    :members:
+.. autodata:: __init__
