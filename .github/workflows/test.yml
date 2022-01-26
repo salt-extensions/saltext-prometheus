@@ -5,7 +5,7 @@ on: [push, pull_request]
 
 jobs:
   Pre-Commit:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
     - uses: actions/checkout@v2
     - name: Set up Python
@@ -25,7 +25,7 @@ jobs:
     - uses: pre-commit/action@v1.0.1
 
   Docs:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     needs: Pre-Commit
 
     timeout-minutes: 10
@@ -54,7 +54,7 @@ jobs:
         nox --force-color -e docs
 
   Linux:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     needs: Pre-Commit
 
     timeout-minutes: 15
@@ -100,7 +100,7 @@ jobs:
       if: always()
       id: codecov-flags
       run: |
-        echo ::set-output name=flags::$(python -c "import sys; print('{},{},salt_{}'.format('${{ runner.os }}'.replace('-latest', ''), 'py{}{}'.format(*sys.version_info), '_'.join(str(v) for v in '${{ matrix.salt-version }}'.replace('==', '_').split('.'))))")
+        echo ::set-output name=flags::$(python -c "import sys; print('{},{},salt_{}'.format('${{ runner.os }}'.replace('-20.04', ''), 'py{}{}'.format(*sys.version_info), '_'.join(str(v) for v in '${{ matrix.salt-version }}'.replace('==', '_').split('.'))))")
 
     - name: Upload Project Code Coverage
       if: always()
@@ -174,7 +174,7 @@ jobs:
         path: artifacts/runtests-*.log
 
   Windows:
-    runs-on: windows-latest
+    runs-on: windows-2019
     needs: Pre-Commit
 
     timeout-minutes: 40
@@ -208,7 +208,7 @@ jobs:
         SALT_REQUIREMENT: salt==${{ matrix.salt-version }}
         EXTRA_REQUIREMENTS_INSTALL: Cython
       run: |
-        export PATH="/C/Program Files (x86)/Windows Kits/10/bin/10.0.18362.0/x64;$PATH"
+        export PATH="/C/Program Files (x86)/Windows Kits/10/bin/10.0.21381.0/x64;$PATH"
         nox --force-color -e tests-3 --install-only
 
     - name: Test
@@ -217,14 +217,14 @@ jobs:
         SALT_REQUIREMENT: salt==${{ matrix.salt-version }}
         SKIP_REQUIREMENTS_INSTALL: YES
       run: |
-        export PATH="/C/Program Files (x86)/Windows Kits/10/bin/10.0.18362.0/x64;$PATH"
+        export PATH="/C/Program Files (x86)/Windows Kits/10/bin/10.0.21381.0/x64;$PATH"
         nox --force-color -e tests-3 -- -vv tests/
 
     - name: Create CodeCov Flags
       if: always()
       id: codecov-flags
       run: |
-        echo ::set-output name=flags::$(python -c "import sys; print('{},{},salt_{}'.format('${{ runner.os }}'.replace('-latest', ''), 'py{}{}'.format(*sys.version_info), '_'.join(str(v) for v in '${{ matrix.salt-version }}'.replace('==', '_').split('.'))))")
+        echo ::set-output name=flags::$(python -c "import sys; print('{},{},salt_{}'.format('${{ runner.os }}'.replace('-2019', ''), 'py{}{}'.format(*sys.version_info), '_'.join(str(v) for v in '${{ matrix.salt-version }}'.replace('==', '_').split('.'))))")
 
     - name: Upload Project Code Coverage
       if: always()
@@ -298,7 +298,7 @@ jobs:
         path: artifacts/runtests-*.log
 
   macOS:
-    runs-on: macOS-latest
+    runs-on: macOS-10.15
     needs: Pre-Commit
 
     timeout-minutes: 40
@@ -343,7 +343,7 @@ jobs:
       if: always()
       id: codecov-flags
       run: |
-        echo ::set-output name=flags::$(python -c "import sys; print('{},{},salt_{}'.format('${{ runner.os }}'.replace('-latest', ''), 'py{}{}'.format(*sys.version_info), '_'.join(str(v) for v in '${{ matrix.salt-version }}'.replace('==', '_').split('.'))))")
+        echo ::set-output name=flags::$(python -c "import sys; print('{},{},salt_{}'.format('${{ runner.os }}'.replace('-10.15', ''), 'py{}{}'.format(*sys.version_info), '_'.join(str(v) for v in '${{ matrix.salt-version }}'.replace('==', '_').split('.'))))")
 
     - name: Upload Project Code Coverage
       if: always()
