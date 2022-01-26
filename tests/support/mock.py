@@ -17,7 +17,6 @@ import errno
 import fnmatch
 import sys
 from unittest import mock
-from unittest.mock import __version__
 from unittest.mock import ANY
 from unittest.mock import call
 from unittest.mock import create_autospec
