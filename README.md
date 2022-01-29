@@ -1,5 +1,7 @@
 # Salt Extension Modules for Prometheus
 
+[![Documentation Status](https://readthedocs.org/projects/saltext-prometheus/badge/?version=latest)](https://saltext-prometheus.readthedocs.io/en/latest/?badge=latest)
+
 This is a collection of Salt extension modules for use with Prometheus.
 
 ## Security
