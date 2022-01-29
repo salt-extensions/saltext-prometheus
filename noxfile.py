@@ -77,7 +77,7 @@ def _get_pydir(session):
 
 def _install_requirements(
     session,
-    *passed_requirements,
+    *passed_requirements,  # pylint: disable=unused-argument
     install_coverage_requirements=True,
     install_test_requirements=True,
     install_source=False,
@@ -108,7 +108,7 @@ def _install_requirements(
             )
             install_command = ["--progress-bar=off"]
             install_command += [req.strip() for req in EXTRA_REQUIREMENTS_INSTALL.split()]
-            session.install(*passed_requirements, silent=PIP_INSTALL_SILENT)
+            session.install(*install_command, silent=PIP_INSTALL_SILENT)
 
         if install_source:
             pkg = "."
