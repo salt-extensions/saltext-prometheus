@@ -48,7 +48,7 @@ def job_ret():
                     "stdout": "applyme",
                     "stderr": "",
                 },
-                "result": True,
+                "result": None,
                 "comment": 'Command "echo applyme" run',
                 "__sls__": "applyme",
                 "__run_num__": 1,
