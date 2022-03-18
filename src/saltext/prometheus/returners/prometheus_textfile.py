@@ -255,10 +255,10 @@ def returner(ret):
     for data in ret.get("return", {}).values():
         total += 1
         duration += data.get("duration", 0)
-        if data["result"]:
-            success += 1
-        else:
+        if data["result"] is False:
             failure += 1
+        else:
+            success += 1
         if data.get("changes"):
             changed += 1
 
@@ -331,7 +331,7 @@ def returner(ret):
 
     if opts["show_failed_states"]:
         for state_id, state_return in ret["return"].items():
-            if not state_return["result"]:
+            if state_return["result"] is False:
                 key = (
                     'salt_failed{state_id="'
                     + state_id.split("_|-")[1]
