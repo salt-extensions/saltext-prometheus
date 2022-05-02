@@ -23,7 +23,7 @@ information, but if you'd like to jump right in here's how to get started:
 
 
     # Clone the repo
-    git clone --origin salt git@github.com:eitrtechnologies/saltext-prometheus.git
+    git clone --origin salt git@github.com:salt-extensions/saltext-prometheus.git
 
     # Change to the repo dir
     cd saltext-prometheus
@@ -80,8 +80,8 @@ that's where you'll find the rest of the documentation.
 
 [security]: https://github.com/saltstack/salt/blob/master/SECURITY.md
 [salt-contributing]: https://docs.saltproject.io/en/master/topics/development/contributing.html
-[issues]: https://github.com/eitrtechnologies/saltext-prometheus/issues
-[PRs]: https://github.com/eitrtechnologies/saltext-prometheus/pulls
-[discussions]: https://github.com/eitrtechnologies/saltext-prometheus/discussions
+[issues]: https://github.com/salt-extensions/saltext-prometheus/issues
+[PRs]: https://github.com/salt-extensions/saltext-prometheus/pulls
+[discussions]: https://github.com/salt-extensions/saltext-prometheus/discussions
 [comments]: https://conventionalcomments.org/
 [docs]: https://docs.saltproject.io/salt/extensions/saltext-prometheus/en/latest/index.html
