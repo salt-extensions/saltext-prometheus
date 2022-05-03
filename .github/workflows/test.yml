@@ -67,8 +67,9 @@ jobs:
           - 3.7
           - 3.8
           - 3.9
+          - 3.10
         salt-version:
-          - 3004
+          - 3004.1
 
     steps:
     - uses: actions/checkout@v2
@@ -186,7 +187,7 @@ jobs:
         python-version:
           - 3.7
         salt-version:
-          - 3004
+          - 3004.1
 
     steps:
     - uses: actions/checkout@v2
@@ -310,7 +311,7 @@ jobs:
           - 3.7
           - 3.8
         salt-version:
-          - 3004
+          - 3004.1
 
     steps:
     - uses: actions/checkout@v2

@@ -84,7 +84,7 @@ repos:
       - id: blacken-docs
         args: [--skip-errors]
         files: ^(docs/.*\.rst|src/saltext/prometheus/.*\.py)$
-        additional_dependencies: [black==21.7b0]
+        additional_dependencies: [black==22.3.0]
   # <---- Formatting -----------------------------------------------------------------------------
 
   # ----- Security ------------------------------------------------------------------------------>
@@ -174,6 +174,17 @@ repos:
           - --py-version=3.9
           - --platform=linux
           - requirements/tests.in
+
+      - id: pip-tools-compile
+        alias: compile-3.10-test-requirements
+        name: Py3.10 Test Requirements
+        files: ^requirements/tests.in$
+        pass_filenames: false
+        args:
+          - -v
+          - --py-version=3.10
+          - --platform=linux
+          - requirements/tests.in
   # <---- Static Test Requirements ---------------------------------------------------------------
 
   # ----- Static Lint Requirements -------------------------------------------------------------->
@@ -220,6 +231,17 @@ repos:
           - --py-version=3.9
           - --platform=linux
           - requirements/lint.in
+
+      - id: pip-tools-compile
+        alias: compile-3.10-test-requirements
+        name: Py3.10 Lint Requirements
+        files: ^requirements/lint.in$
+        pass_filenames: false
+        args:
+          - -v
+          - --py-version=3.10
+          - --platform=linux
+          - requirements/lint.in
   # <---- Static Lint Requirements ---------------------------------------------------------------
 
   # ----- Static Docs Requirements -------------------------------------------------------------->
@@ -264,6 +286,17 @@ repos:
         args:
           - -v
           - --py-version=3.9
+          - --platform=linux
+          - requirements/docs.in
+
+      - id: pip-tools-compile
+        alias: compile-3.10-test-requirements
+        name: Py3.10 Docs Requirements
+        files: ^requirements/docs.in$
+        pass_filenames: false
+        args:
+          - -v
+          - --py-version=3.10
           - --platform=linux
           - requirements/docs.in
   # <---- Static Docs Requirements ---------------------------------------------------------------
