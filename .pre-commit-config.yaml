@@ -84,7 +84,7 @@ repos:
       - id: blacken-docs
         args: [--skip-errors]
         files: ^(docs/.*\.rst|src/saltext/prometheus/.*\.py)$
-        additional_dependencies: [black==22.3.0]
+        additional_dependencies: [black==21.7b0]
   # <---- Formatting -----------------------------------------------------------------------------
 
   # ----- Security ------------------------------------------------------------------------------>
