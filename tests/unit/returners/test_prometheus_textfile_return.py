@@ -342,3 +342,33 @@ def test_prometheus_output_with_show_failed_state_option_and_abort_state_ids(
             )
         )
     assert salt_prom == expected
+
+
+def test_prometheus_output_with_raw_version(patch_dunders, job_ret, cache_dir, minion):
+    expected_version = "3004+12.g557e6cc0fc"
+    prometheus_textfile.__grains__.update({"saltversion": expected_version})
+
+    # raw_version == False
+    prometheus_textfile.returner(job_ret)
+
+    with salt.utils.files.fopen(
+        os.path.join(cache_dir, "prometheus_textfile", "salt.prom")
+    ) as prom_file:
+        # Grab only the salt version
+        salt_version = "".join(
+            sorted(line.split()[1] for line in prom_file if line.startswith("salt_version "))
+        )
+    assert salt_version == expected_version.split("+", maxsplit=1)[0]
+
+    # raw_version == True
+    prometheus_textfile.__opts__.update({"raw_version": True})
+    prometheus_textfile.returner(job_ret)
+
+    with salt.utils.files.fopen(
+        os.path.join(cache_dir, "prometheus_textfile", "salt.prom")
+    ) as prom_file:
+        # Grab only the salt version
+        salt_version = "".join(
+            sorted(line.split()[1] for line in prom_file if line.startswith("salt_version "))
+        )
+    assert salt_version == expected_version

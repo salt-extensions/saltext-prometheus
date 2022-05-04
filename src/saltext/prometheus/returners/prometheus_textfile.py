@@ -111,6 +111,17 @@ the following manner:
     # single state
     prometheus_textfile.abort_state_ids: circuit_breaker_state
 
+If you have systems running Salt versions which have a non-standard version scheme
+(such as running from patched versions), the entire version string can be shown
+by utilizing the ``raw_version`` parameter. Otherwise, only the portion of the
+string before a plus sign (``+``) will be shown. So, a version string such as
+"3004+12.g557e6cc0fc" will be shown as "3004" by default unless ``raw_version``
+is enabled.
+
+.. code-block:: yaml
+
+    prometheus_textfile.raw_version: true
+
 """
 import logging
 import os
@@ -133,7 +144,7 @@ except (ImportError, ModuleNotFoundError):
 __virtualname__ = "prometheus_textfile"
 # Loader workaround
 try:
-    __grains__
+    __grains__  # pylint: disable=used-before-assignment
 except NameError:
     import salt.version  # pylint: disable=ungrouped-imports
 
@@ -159,6 +170,7 @@ def _get_options(ret):
         "add_state_name": False,
         "abort_state_ids": None,
         "show_failed_states": False,
+        "raw_version": False,
     }
     attrs = {
         "exe": "exe",
@@ -171,6 +183,7 @@ def _get_options(ret):
         "add_state_name": "add_state_name",
         "abort_state_ids": "abort_state_ids",
         "show_failed_states": "show_failed_states",
+        "raw_version": "raw_version",
     }
     _options = salt.returners.get_returner_options(
         __virtualname__,
@@ -321,7 +334,9 @@ def returner(ret):
         },
         "salt_version": {
             "help": "Version of installed Salt package",
-            "value": __grains__["saltversion"],
+            "value": __grains__["saltversion"]
+            if opts["raw_version"]
+            else __grains__["saltversion"].split("+", maxsplit=1)[0],
         },
         "salt_version_tagged": {
             "help": "Version of installed Salt package as a tag",
