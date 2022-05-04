@@ -4,6 +4,15 @@ This project uses [Semantic Versioning](https://semver.org/) - MAJOR.MINOR.PATCH
 
 # Changelog
 
+Saltext.Prometheus 1.1.1 (2022-05-04)
+=====================================
+
+Added
+-----
+
+- Hide raw version numbers to normalize data on release version (#6)
+
+
 Saltext.Prometheus 1.0.1 (2022-03-18)
 =====================================
 
