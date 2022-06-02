@@ -129,6 +129,9 @@ import time
 
 import salt.returners
 import salt.utils.files
+from prometheus_client import CollectorRegistry
+from prometheus_client import Gauge
+from prometheus_client import write_to_textfile
 
 log = logging.getLogger(__name__)
 
@@ -334,9 +337,7 @@ def returner(ret):
         },
         "salt_version": {
             "help": "Version of installed Salt package",
-            "value": __grains__["saltversion"]
-            if opts["raw_version"]
-            else __grains__["saltversion"].split("+", maxsplit=1)[0],
+            "value": __grains__["saltversion"].split("+", maxsplit=1)[0],
         },
         "salt_version_tagged": {
             "help": "Version of installed Salt package as a tag",
@@ -344,41 +345,39 @@ def returner(ret):
         },
     }
 
+    registry = CollectorRegistry()
+
     if opts["show_failed_states"]:
+        labels = ["state_id", "state_comment"]
+        if opts["add_state_name"]:
+            labels.append("state")
+        gauge = Gauge(
+            "salt_failed",
+            "Information regarding state with failure condition",
+            labels,
+            registry=registry,
+        )
         for state_id, state_return in ret["return"].items():
             if state_return["result"] is False:
-                key = (
-                    'salt_failed{state_id="'
-                    + state_id.split("_|-")[1]
-                    + '",state_comment="'
-                    + state_return.get("comment", "").replace('"', "").replace("\n", " ")
-                )
+                label_values = [
+                    state_id.split("_|-")[1],
+                    state_return.get("comment", "").replace('"', "").replace("\n", " "),
+                ]
                 if opts["add_state_name"]:
-                    key += '",state="' + prom_state
-                key += '"}'
-                output.update(
-                    {
-                        key: {
-                            "help": "Information regarding state with failure condition",
-                            "value": 1,
-                        },
-                    }
-                )
+                    label_values.append(prom_state)
+                gauge.labels(*label_values).set(1)
 
     if opts["abort_state_ids"]:
         if not isinstance(opts["abort_state_ids"], list):
             opts["abort_state_ids"] = [item.strip() for item in opts["abort_state_ids"].split(",")]
-        output.update(
-            {
-                "salt_aborted": {
-                    "help": "Flag to show that a specific abort state failed",
-                    "value": 0,
-                },
-            }
+
+        gauge = Gauge(
+            "salt_aborted", "Flag to show that a specific abort state failed", registry=registry
         )
+        gauge.set(0)
         for state_id, state_return in ret["return"].items():
             if not state_return["result"] and state_return["__id__"] in opts["abort_state_ids"]:
-                output["salt_aborted"]["value"] = 1
+                gauge.set(1)
 
     if opts["add_state_name"]:
         old_name, ext = os.path.splitext(opts["filename"])
@@ -388,48 +387,34 @@ def returner(ret):
             old_name + ext,
             opts["filename"],
         )
-        labels = 'state="{}"'.format(prom_state)
-        for key in list(output.keys()):
-            _labels = labels
-            if key.startswith("salt_failed"):
-                continue
-            if key == "salt_version_tagged":
-                _labels = labels + ',salt_version="{}"'.format(__grains__["saltversion"])
-            output[key + "{" + _labels + "}"] = output.pop(key)
-    else:
-        output[
-            'salt_version_tagged{salt_version="' + __grains__["saltversion"] + '"}'
-        ] = output.pop("salt_version_tagged")
 
+    for key in list(output.keys()):
+        labels = []
+        label_values = []
+        if opts["add_state_name"]:
+            labels.append("state")
+            label_values.append(prom_state)
+        if key == "salt_version_tagged":
+            labels.append("salt_version")
+            if opts["raw_version"]:
+                label_values.append(__grains__["saltversion"])
+            else:
+                label_values.append(__grains__["saltversion"].split("+", maxsplit=1)[0])
+        temp_dict = output.pop(key)
+        gauge = Gauge(key, temp_dict["help"], labels, registry=registry)
+        if label_values:
+            gauge.labels(*label_values).set(temp_dict["value"])
+        else:
+            gauge.set(temp_dict["value"])
+
+    write_to_textfile(opts["filename"], registry)
+    os.chown(opts["filename"], opts["uid"], opts["gid"])
     if opts["mode"]:
         try:
             opts["mode"] = int(opts["mode"], base=8)
+            os.chmod(opts["filename"], opts["mode"])
         except ValueError:
             opts["mode"] = None
             log.exception("Unable to convert mode to octal. Using system default.")
-
-    try:
-        with salt.utils.files.fpopen(
-            opts["filename"],
-            "w",
-            uid=opts["uid"],
-            gid=opts["gid"],
-            mode=opts["mode"],
-        ) as textfile:
-            outlines = []
-            metric_list = set()
-            for key, val in output.items():
-                metric = key.split("{", maxsplit=1)[0]
-                if metric not in metric_list:
-                    outlines.append(
-                        "# HELP {metric} {helptext}".format(metric=metric, helptext=val["help"])
-                    )
-                    outlines.append("# TYPE {metric} gauge".format(metric=metric))
-                    metric_list.add(metric)
-                outlines.append("{key} {value}".format(key=key, value=val["value"]))
-            textfile.write("\n".join(outlines) + "\n")
-    except Exception:  # pylint: disable=broad-except
-        log.exception("Could not write to prometheus file: %s", opts["filename"])
-        return
 
     return True

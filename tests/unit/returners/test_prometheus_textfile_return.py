@@ -1,5 +1,6 @@
 # pylint: disable=unused-argument,invalid-name
 import os
+import re
 
 import pytest
 import salt.utils.files
@@ -83,19 +84,19 @@ def test_basic_prometheus_output_with_default_options(patch_dunders, job_ret, ca
             [
                 "# HELP salt_procs Number of salt minion processes running",
                 "# TYPE salt_procs gauge",
-                "salt_procs 0",
+                "salt_procs 0.0",
                 "# HELP salt_states_succeeded Number of successful states in the run",
                 "# TYPE salt_states_succeeded gauge",
-                "salt_states_succeeded 2",
+                "salt_states_succeeded 2.0",
                 "# HELP salt_states_failed Number of failed states in the run",
                 "# TYPE salt_states_failed gauge",
-                "salt_states_failed 0",
+                "salt_states_failed 0.0",
                 "# HELP salt_states_changed Number of changed states in the run",
                 "# TYPE salt_states_changed gauge",
-                "salt_states_changed 2",
+                "salt_states_changed 2.0",
                 "# HELP salt_states_total Total states in the run",
                 "# TYPE salt_states_total gauge",
-                "salt_states_total 2",
+                "salt_states_total 2.0",
                 "# HELP salt_states_success_pct Percent of successful states in the run",
                 "# TYPE salt_states_success_pct gauge",
                 "salt_states_success_pct 100.0",
@@ -117,7 +118,7 @@ def test_basic_prometheus_output_with_default_options(patch_dunders, job_ret, ca
                 "salt_version {}".format(salt.version.__version__),
                 "# HELP salt_version_tagged Version of installed Salt package as a tag",
                 "# TYPE salt_version_tagged gauge",
-                'salt_version_tagged{{salt_version="{}"}} 1'.format(salt.version.__version__),
+                'salt_version_tagged{{salt_version="{}"}} 1.0'.format(salt.version.__version__),
             ]
         )
     )
@@ -167,19 +168,19 @@ def test_when_add_state_name_is_set_then_correct_output_should_be_in_correct_fil
             [
                 "# HELP salt_procs Number of salt minion processes running",
                 "# TYPE salt_procs gauge",
-                'salt_procs{{state="{}"}} 0'.format(state_name),
+                'salt_procs{{state="{}"}} 0.0'.format(state_name),
                 "# HELP salt_states_succeeded Number of successful states in the run",
                 "# TYPE salt_states_succeeded gauge",
-                'salt_states_succeeded{{state="{}"}} 2'.format(state_name),
+                'salt_states_succeeded{{state="{}"}} 2.0'.format(state_name),
                 "# HELP salt_states_failed Number of failed states in the run",
                 "# TYPE salt_states_failed gauge",
-                'salt_states_failed{{state="{}"}} 0'.format(state_name),
+                'salt_states_failed{{state="{}"}} 0.0'.format(state_name),
                 "# HELP salt_states_changed Number of changed states in the run",
                 "# TYPE salt_states_changed gauge",
-                'salt_states_changed{{state="{}"}} 2'.format(state_name),
+                'salt_states_changed{{state="{}"}} 2.0'.format(state_name),
                 "# HELP salt_states_total Total states in the run",
                 "# TYPE salt_states_total gauge",
-                'salt_states_total{{state="{}"}} 2'.format(state_name),
+                'salt_states_total{{state="{}"}} 2.0'.format(state_name),
                 "# HELP salt_states_success_pct Percent of successful states in the run",
                 "# TYPE salt_states_success_pct gauge",
                 'salt_states_success_pct{{state="{}"}} 100.0'.format(state_name),
@@ -201,8 +202,8 @@ def test_when_add_state_name_is_set_then_correct_output_should_be_in_correct_fil
                 'salt_version{{state="{}"}} {}'.format(state_name, salt.version.__version__),
                 "# HELP salt_version_tagged Version of installed Salt package as a tag",
                 "# TYPE salt_version_tagged gauge",
-                'salt_version_tagged{{state="{}",salt_version="{}"}} 1'.format(
-                    state_name, salt.version.__version__
+                'salt_version_tagged{{salt_version="{}",state="{}"}} 1.0'.format(
+                    salt.version.__version__, state_name
                 ),
             ]
         )
@@ -231,19 +232,19 @@ def test_prometheus_output_with_show_failed_state_option_and_abort_state_ids(
     promfile_lines = [
         "# HELP salt_procs Number of salt minion processes running",
         "# TYPE salt_procs gauge",
-        "salt_procs 0",
+        "salt_procs 0.0",
         "# HELP salt_states_succeeded Number of successful states in the run",
         "# TYPE salt_states_succeeded gauge",
-        "salt_states_succeeded 1",
+        "salt_states_succeeded 1.0",
         "# HELP salt_states_failed Number of failed states in the run",
         "# TYPE salt_states_failed gauge",
-        "salt_states_failed 1",
+        "salt_states_failed 1.0",
         "# HELP salt_states_changed Number of changed states in the run",
         "# TYPE salt_states_changed gauge",
-        "salt_states_changed 2",
+        "salt_states_changed 2.0",
         "# HELP salt_states_total Total states in the run",
         "# TYPE salt_states_total gauge",
-        "salt_states_total 2",
+        "salt_states_total 2.0",
         "# HELP salt_states_success_pct Percent of successful states in the run",
         "# TYPE salt_states_success_pct gauge",
         "salt_states_success_pct 50.0",
@@ -265,10 +266,10 @@ def test_prometheus_output_with_show_failed_state_option_and_abort_state_ids(
         "salt_version {}".format(salt.version.__version__),
         "# HELP salt_version_tagged Version of installed Salt package as a tag",
         "# TYPE salt_version_tagged gauge",
-        'salt_version_tagged{{salt_version="{}"}} 1'.format(salt.version.__version__),
+        'salt_version_tagged{{salt_version="{}"}} 1.0'.format(salt.version.__version__),
         "# HELP salt_failed Information regarding state with failure condition",
         "# TYPE salt_failed gauge",
-        'salt_failed{state_id="echo includeme",state_comment="Command echo includeme run"} 1',
+        'salt_failed{state_comment="Command echo includeme run",state_id="echo includeme"} 1.0',
     ]
 
     # Test one failed state
@@ -292,12 +293,12 @@ def test_prometheus_output_with_show_failed_state_option_and_abort_state_ids(
 
     # Test two failed states
     job_ret["return"]["cmd_|-echo applyme_|-echo applyme_|-run"]["result"] = False
-    promfile_lines[5] = "salt_states_succeeded 0"
-    promfile_lines[8] = "salt_states_failed 2"
+    promfile_lines[5] = "salt_states_succeeded 0.0"
+    promfile_lines[8] = "salt_states_failed 2.0"
     promfile_lines[17] = "salt_states_success_pct 0.0"
     promfile_lines[20] = "salt_states_failure_pct 100.0"
     promfile_lines.append(
-        'salt_failed{state_id="echo applyme",state_comment="Command echo applyme run"} 1'
+        'salt_failed{state_comment="Command echo applyme run",state_id="echo applyme"} 1.0'
     )
     expected = "\n".join(sorted(promfile_lines))
 
@@ -323,7 +324,7 @@ def test_prometheus_output_with_show_failed_state_option_and_abort_state_ids(
         [
             "# HELP salt_aborted Flag to show that a specific abort state failed",
             "# TYPE salt_aborted gauge",
-            "salt_aborted 1",
+            "salt_aborted 1.0",
         ]
     )
     expected = "\n".join(sorted(promfile_lines))
@@ -346,6 +347,8 @@ def test_prometheus_output_with_show_failed_state_option_and_abort_state_ids(
 
 def test_prometheus_output_with_raw_version(patch_dunders, job_ret, cache_dir, minion):
     expected_version = "3004+12.g557e6cc0fc"
+    short_version = expected_version.split("+", maxsplit=1)[0]
+    float_version = str(float(short_version))
     prometheus_textfile.__grains__.update({"saltversion": expected_version})
 
     # raw_version == False
@@ -355,12 +358,19 @@ def test_prometheus_output_with_raw_version(patch_dunders, job_ret, cache_dir, m
         os.path.join(cache_dir, "prometheus_textfile", "salt.prom")
     ) as prom_file:
         # Grab only the salt version
-        salt_version = "".join(
-            sorted(line.split()[1] for line in prom_file if line.startswith("salt_version "))
-        )
-    assert salt_version == expected_version.split("+", maxsplit=1)[0]
+        for line in prom_file:
+            if line.startswith("salt_version "):
+                salt_version = line.split()[1]
+            elif line.startswith("salt_version_tagged"):
 
+                c = re.compile('salt_version="(.+)"')
+                temp = c.search(line)
+                salt_version_tagged = temp.groups()[0]
+
+    assert salt_version == float_version
+    assert salt_version_tagged == short_version
     # raw_version == True
+
     prometheus_textfile.__opts__.update({"raw_version": True})
     prometheus_textfile.returner(job_ret)
 
@@ -368,7 +378,14 @@ def test_prometheus_output_with_raw_version(patch_dunders, job_ret, cache_dir, m
         os.path.join(cache_dir, "prometheus_textfile", "salt.prom")
     ) as prom_file:
         # Grab only the salt version
-        salt_version = "".join(
-            sorted(line.split()[1] for line in prom_file if line.startswith("salt_version "))
-        )
-    assert salt_version == expected_version
+        for line in prom_file:
+            if line.startswith("salt_version "):
+                salt_version = line.split()[1]
+            elif line.startswith("salt_version_tagged"):
+
+                c = re.compile('salt_version="(.+)"')
+                temp = c.search(line)
+                salt_version_tagged = temp.groups()[0]
+
+    assert salt_version == float_version
+    assert salt_version_tagged == expected_version
