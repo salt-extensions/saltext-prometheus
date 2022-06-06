@@ -351,7 +351,7 @@ def returner(ret):
         labels = ["state_id", "state_comment"]
         if opts["add_state_name"]:
             labels.append("state")
-        gauge = Gauge(
+        gauge_show_failed_states = Gauge(
             "salt_failed",
             "Information regarding state with failure condition",
             labels,
@@ -365,19 +365,19 @@ def returner(ret):
                 ]
                 if opts["add_state_name"]:
                     label_values.append(prom_state)
-                gauge.labels(*label_values).set(1)
+                gauge_show_failed_states.labels(*label_values).set(1)
 
     if opts["abort_state_ids"]:
         if not isinstance(opts["abort_state_ids"], list):
             opts["abort_state_ids"] = [item.strip() for item in opts["abort_state_ids"].split(",")]
 
-        gauge = Gauge(
+        gauge_salt_aborted = Gauge(
             "salt_aborted", "Flag to show that a specific abort state failed", registry=registry
         )
-        gauge.set(0)
+        gauge_salt_aborted.set(0)
         for state_id, state_return in ret["return"].items():
             if not state_return["result"] and state_return["__id__"] in opts["abort_state_ids"]:
-                gauge.set(1)
+                gauge_salt_aborted.set(1)
 
     if opts["add_state_name"]:
         old_name, ext = os.path.splitext(opts["filename"])
@@ -400,12 +400,12 @@ def returner(ret):
                 label_values.append(__grains__["saltversion"])
             else:
                 label_values.append(__grains__["saltversion"].split("+", maxsplit=1)[0])
-        temp_dict = output.pop(key)
-        gauge = Gauge(key, temp_dict["help"], labels, registry=registry)
+        keys_dict = output.pop(key)
+        gauge_keys = Gauge(key, keys_dict["help"], labels, registry=registry)
         if label_values:
-            gauge.labels(*label_values).set(temp_dict["value"])
+            gauge_keys.labels(*label_values).set(keys_dict["value"])
         else:
-            gauge.set(temp_dict["value"])
+            gauge_keys.set(keys_dict["value"])
 
     write_to_textfile(opts["filename"], registry)
     os.chown(opts["filename"], opts["uid"], opts["gid"])

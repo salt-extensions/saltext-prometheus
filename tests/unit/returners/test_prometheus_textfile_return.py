@@ -362,15 +362,14 @@ def test_prometheus_output_with_raw_version(patch_dunders, job_ret, cache_dir, m
             if line.startswith("salt_version "):
                 salt_version = line.split()[1]
             elif line.startswith("salt_version_tagged"):
-
-                c = re.compile('salt_version="(.+)"')
-                temp = c.search(line)
-                salt_version_tagged = temp.groups()[0]
+                expression_pattern = re.compile('salt_version="(.+)"')
+                version = expression_pattern.search(line)
+                salt_version_tagged = version.groups()[0]
 
     assert salt_version == float_version
     assert salt_version_tagged == short_version
-    # raw_version == True
 
+    # raw_version == True
     prometheus_textfile.__opts__.update({"raw_version": True})
     prometheus_textfile.returner(job_ret)
 
@@ -382,10 +381,9 @@ def test_prometheus_output_with_raw_version(patch_dunders, job_ret, cache_dir, m
             if line.startswith("salt_version "):
                 salt_version = line.split()[1]
             elif line.startswith("salt_version_tagged"):
-
-                c = re.compile('salt_version="(.+)"')
-                temp = c.search(line)
-                salt_version_tagged = temp.groups()[0]
+                expression_pattern = re.compile('salt_version="(.+)"')
+                version = expression_pattern.search(line)
+                salt_version_tagged = version.groups()[0]
 
     assert salt_version == float_version
     assert salt_version_tagged == expected_version
