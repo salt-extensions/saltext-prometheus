@@ -127,6 +127,7 @@ import logging
 import os
 import time
 
+import salt.modules.file
 import salt.returners
 import salt.utils.files
 from prometheus_client import CollectorRegistry
@@ -408,11 +409,11 @@ def returner(ret):
             gauge_keys.set(keys_dict["value"])
 
     write_to_textfile(opts["filename"], registry)
-    os.chown(opts["filename"], opts["uid"], opts["gid"])
+    salt.modules.file.chown(opts["filename"], opts["uid"], opts["gid"])
     if opts["mode"]:
         try:
             opts["mode"] = int(opts["mode"], base=8)
-            os.chmod(opts["filename"], opts["mode"])
+            salt.modules.file.set_mode(opts["filename"], opts["mode"])
         except ValueError:
             opts["mode"] = None
             log.exception("Unable to convert mode to octal. Using system default.")
