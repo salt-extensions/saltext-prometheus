@@ -2,28 +2,4 @@
 =================================================
 
 .. automodule:: saltext.prometheus.returners.prometheus_textfile
-
-   
-   
-   
-
-   
-   
-   .. rubric:: Functions
-
-   .. autosummary::
-   
-      returner
-   
-   
-
-   
-   
-   
-
-   
-   
-   
-
-
-
+    :members:
