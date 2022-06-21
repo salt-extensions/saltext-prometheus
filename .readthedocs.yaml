@@ -5,6 +5,14 @@
 # Required
 version: 2
 
+python:
+  version: "3.9"
+  install:
+    - method: pip
+      path: .
+      extra_requirements:
+        - docs
+
 # Set the version of Python and other tools you might need
 build:
   os: ubuntu-20.04
