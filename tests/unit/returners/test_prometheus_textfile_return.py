@@ -391,7 +391,10 @@ def test_fail_comments_lengths(patch_dunders, job_ret, cache_dir, minion):
         'salt_failed{state_comment="Command echo applyme run",state_id="echo applyme"} 1.0',
     ]
 
-    # Test one failed state
+    # Test two failed states with no comment length limit
+
+    prometheus_textfile.__opts__.update({"fail_comment_length": None})
+
     expected = "\n".join(sorted(promfile_lines))
 
     job_ret["return"]["cmd_|-echo includeme_|-echo includeme_|-run"]["result"] = False
@@ -412,9 +415,6 @@ def test_fail_comments_lengths(patch_dunders, job_ret, cache_dir, minion):
             )
         )
     assert salt_prom == expected
-
-    prometheus_textfile.__opts__.update({"truncate_fail_comment": True})
-    prometheus_textfile.__opts__.update({"fail_comment_length": 15})
 
     promfile_lines = [
         "# HELP salt_procs Number of salt minion processes running",
@@ -459,6 +459,10 @@ def test_fail_comments_lengths(patch_dunders, job_ret, cache_dir, minion):
         'salt_failed{state_comment="Command echo in",state_id="echo includeme"} 1.0',
         'salt_failed{state_comment="Command echo ap",state_id="echo applyme"} 1.0',
     ]
+
+    # Test two failed states with comment length limit of 15
+
+    prometheus_textfile.__opts__.update({"fail_comment_length": 15})
 
     expected = "\n".join(sorted(promfile_lines))
 

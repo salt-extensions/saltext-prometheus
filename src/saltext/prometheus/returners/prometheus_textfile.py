@@ -176,8 +176,7 @@ def _get_options(ret):
         "abort_state_ids": None,
         "show_failed_states": False,
         "raw_version": False,
-        "truncate_fail_comment": False,
-        "fail_comment_length": 25,
+        "fail_comment_length": None,
     }
     attrs = {
         "exe": "exe",
@@ -191,7 +190,6 @@ def _get_options(ret):
         "abort_state_ids": "abort_state_ids",
         "show_failed_states": "show_failed_states",
         "raw_version": "raw_version",
-        "truncate_fail_comment": "truncate_fail_comment",
         "fail_comment_length": "fail_comment_length",
     }
     _options = salt.returners.get_returner_options(
@@ -366,7 +364,7 @@ def returner(ret):
         for state_id, state_return in ret["return"].items():
             if state_return["result"] is False:
                 failed_comment = state_return.get("comment", "").replace('"', "").replace("\n", " ")
-                if not opts["truncate_fail_comment"]:
+                if opts["fail_comment_length"] is None:
                     label_values = [state_id.split("_|-")[1], failed_comment]
                 else:
                     # pylint: disable=whitespace-before-colon
