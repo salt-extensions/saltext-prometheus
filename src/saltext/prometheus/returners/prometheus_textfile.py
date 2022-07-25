@@ -364,15 +364,12 @@ def returner(ret):
         for state_id, state_return in ret["return"].items():
             if state_return["result"] is False:
                 failed_comment = state_return.get("comment", "").replace('"', "").replace("\n", " ")
-                if opts["fail_comment_length"] is None:
-                    label_values = [state_id.split("_|-")[1], failed_comment]
-                else:
-                    # pylint: disable=whitespace-before-colon
-                    label_values = [
-                        state_id.split("_|-")[1],
-                        failed_comment[0 : opts["fail_comment_length"]],
-                    ]
-                    # pylint: enable=whitespace-before-colon
+                # pylint: disable=whitespace-before-colon
+                label_values = [
+                    state_id.split("_|-")[1],
+                    failed_comment[0 : opts["fail_comment_length"]],
+                ]
+                # pylint: enable=whitespace-before-colon
                 if opts["add_state_name"]:
                     label_values.append(prom_state)
                 gauge_show_failed_states.labels(*label_values).set(1)
