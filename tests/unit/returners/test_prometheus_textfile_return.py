@@ -345,6 +345,148 @@ def test_prometheus_output_with_show_failed_state_option_and_abort_state_ids(
     assert salt_prom == expected
 
 
+def test_fail_comments_lengths(patch_dunders, job_ret, cache_dir, minion):
+    prometheus_textfile.__opts__.update({"show_failed_states": True})
+    promfile_lines = [
+        "# HELP salt_procs Number of salt minion processes running",
+        "# TYPE salt_procs gauge",
+        "salt_procs 0.0",
+        "# HELP salt_states_succeeded Number of successful states in the run",
+        "# TYPE salt_states_succeeded gauge",
+        "salt_states_succeeded 0.0",
+        "# HELP salt_states_failed Number of failed states in the run",
+        "# TYPE salt_states_failed gauge",
+        "salt_states_failed 2.0",
+        "# HELP salt_states_changed Number of changed states in the run",
+        "# TYPE salt_states_changed gauge",
+        "salt_states_changed 2.0",
+        "# HELP salt_states_total Total states in the run",
+        "# TYPE salt_states_total gauge",
+        "salt_states_total 2.0",
+        "# HELP salt_states_success_pct Percent of successful states in the run",
+        "# TYPE salt_states_success_pct gauge",
+        "salt_states_success_pct 0.0",
+        "# HELP salt_states_failure_pct Percent of failed states in the run",
+        "# TYPE salt_states_failure_pct gauge",
+        "salt_states_failure_pct 100.0",
+        "# HELP salt_states_changed_pct Percent of changed states in the run",
+        "# TYPE salt_states_changed_pct gauge",
+        "salt_states_changed_pct 100.0",
+        "# HELP salt_elapsed_time Time spent for all operations during the state run",
+        "# TYPE salt_elapsed_time gauge",
+        "salt_elapsed_time 13.695",
+        "# HELP salt_last_started Estimated time the state run started",
+        "# TYPE salt_last_started gauge",
+        "# HELP salt_last_completed Time of last state run completion",
+        "# TYPE salt_last_completed gauge",
+        "# HELP salt_version Version of installed Salt package",
+        "# TYPE salt_version gauge",
+        "salt_version {}".format(salt.version.__version__),
+        "# HELP salt_version_tagged Version of installed Salt package as a tag",
+        "# TYPE salt_version_tagged gauge",
+        'salt_version_tagged{{salt_version="{}"}} 1.0'.format(salt.version.__version__),
+        "# HELP salt_failed Information regarding state with failure condition",
+        "# TYPE salt_failed gauge",
+        'salt_failed{state_comment="Command echo includeme run",state_id="echo includeme"} 1.0',
+        'salt_failed{state_comment="Command echo applyme run",state_id="echo applyme"} 1.0',
+    ]
+
+    # Test two failed states with no comment length limit
+
+    prometheus_textfile.__opts__.update({"fail_comment_length": None})
+
+    expected = "\n".join(sorted(promfile_lines))
+
+    job_ret["return"]["cmd_|-echo includeme_|-echo includeme_|-run"]["result"] = False
+    job_ret["return"]["cmd_|-echo applyme_|-echo applyme_|-run"]["result"] = False
+
+    prometheus_textfile.returner(job_ret)
+
+    with salt.utils.files.fopen(
+        os.path.join(cache_dir, "prometheus_textfile", "salt.prom")
+    ) as prom_file:
+        # Drop time-based fields for comparison
+        salt_prom = "\n".join(
+            sorted(
+                line[:-1]
+                for line in prom_file
+                if not line.startswith("salt_last_started")
+                and not line.startswith("salt_last_completed")
+            )
+        )
+    assert salt_prom == expected
+
+    promfile_lines = [
+        "# HELP salt_procs Number of salt minion processes running",
+        "# TYPE salt_procs gauge",
+        "salt_procs 0.0",
+        "# HELP salt_states_succeeded Number of successful states in the run",
+        "# TYPE salt_states_succeeded gauge",
+        "salt_states_succeeded 0.0",
+        "# HELP salt_states_failed Number of failed states in the run",
+        "# TYPE salt_states_failed gauge",
+        "salt_states_failed 2.0",
+        "# HELP salt_states_changed Number of changed states in the run",
+        "# TYPE salt_states_changed gauge",
+        "salt_states_changed 2.0",
+        "# HELP salt_states_total Total states in the run",
+        "# TYPE salt_states_total gauge",
+        "salt_states_total 2.0",
+        "# HELP salt_states_success_pct Percent of successful states in the run",
+        "# TYPE salt_states_success_pct gauge",
+        "salt_states_success_pct 0.0",
+        "# HELP salt_states_failure_pct Percent of failed states in the run",
+        "# TYPE salt_states_failure_pct gauge",
+        "salt_states_failure_pct 100.0",
+        "# HELP salt_states_changed_pct Percent of changed states in the run",
+        "# TYPE salt_states_changed_pct gauge",
+        "salt_states_changed_pct 100.0",
+        "# HELP salt_elapsed_time Time spent for all operations during the state run",
+        "# TYPE salt_elapsed_time gauge",
+        "salt_elapsed_time 13.695",
+        "# HELP salt_last_started Estimated time the state run started",
+        "# TYPE salt_last_started gauge",
+        "# HELP salt_last_completed Time of last state run completion",
+        "# TYPE salt_last_completed gauge",
+        "# HELP salt_version Version of installed Salt package",
+        "# TYPE salt_version gauge",
+        "salt_version {}".format(salt.version.__version__),
+        "# HELP salt_version_tagged Version of installed Salt package as a tag",
+        "# TYPE salt_version_tagged gauge",
+        'salt_version_tagged{{salt_version="{}"}} 1.0'.format(salt.version.__version__),
+        "# HELP salt_failed Information regarding state with failure condition",
+        "# TYPE salt_failed gauge",
+        'salt_failed{state_comment="Command echo in",state_id="echo includeme"} 1.0',
+        'salt_failed{state_comment="Command echo ap",state_id="echo applyme"} 1.0',
+    ]
+
+    # Test two failed states with comment length limit of 15
+
+    prometheus_textfile.__opts__.update({"fail_comment_length": 15})
+
+    expected = "\n".join(sorted(promfile_lines))
+
+    job_ret["return"]["cmd_|-echo includeme_|-echo includeme_|-run"]["result"] = False
+    job_ret["return"]["cmd_|-echo applyme_|-echo applyme_|-run"]["result"] = False
+
+    prometheus_textfile.returner(job_ret)
+
+    with salt.utils.files.fopen(
+        os.path.join(cache_dir, "prometheus_textfile", "salt.prom")
+    ) as prom_file:
+        # Drop time-based fields for comparison
+        salt_prom = "\n".join(
+            sorted(
+                line[:-1]
+                for line in prom_file
+                if not line.startswith("salt_last_started")
+                and not line.startswith("salt_last_completed")
+            )
+        )
+
+    assert salt_prom == expected
+
+
 def test_prometheus_output_with_raw_version(patch_dunders, job_ret, cache_dir, minion):
     expected_version = "3004+12.g557e6cc0fc"
     short_version = expected_version.split("+", maxsplit=1)[0]

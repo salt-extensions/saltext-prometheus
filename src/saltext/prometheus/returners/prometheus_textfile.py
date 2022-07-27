@@ -176,6 +176,7 @@ def _get_options(ret):
         "abort_state_ids": None,
         "show_failed_states": False,
         "raw_version": False,
+        "fail_comment_length": None,
     }
     attrs = {
         "exe": "exe",
@@ -189,6 +190,7 @@ def _get_options(ret):
         "abort_state_ids": "abort_state_ids",
         "show_failed_states": "show_failed_states",
         "raw_version": "raw_version",
+        "fail_comment_length": "fail_comment_length",
     }
     _options = salt.returners.get_returner_options(
         __virtualname__,
@@ -361,10 +363,13 @@ def returner(ret):
         )
         for state_id, state_return in ret["return"].items():
             if state_return["result"] is False:
+                failed_comment = state_return.get("comment", "").replace('"', "").replace("\n", " ")
+                # pylint: disable=whitespace-before-colon
                 label_values = [
                     state_id.split("_|-")[1],
-                    state_return.get("comment", "").replace('"', "").replace("\n", " "),
+                    failed_comment[0 : opts["fail_comment_length"]],
                 ]
+                # pylint: enable=whitespace-before-colon
                 if opts["add_state_name"]:
                     label_values.append(prom_state)
                 gauge_show_failed_states.labels(*label_values).set(1)
