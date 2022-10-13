@@ -4,6 +4,15 @@ This project uses [Semantic Versioning](https://semver.org/) - MAJOR.MINOR.PATCH
 
 # Changelog
 
+Saltext.Prometheus 2.0.0 (2022-10-13)
+=====================================
+
+Added
+-----
+
+- Add ability to use prometheus_client library (#2)
+
+
 Saltext.Prometheus 1.1.1 (2022-05-04)
 =====================================
 
