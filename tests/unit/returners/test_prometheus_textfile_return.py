@@ -1,6 +1,7 @@
 # pylint: disable=unused-argument,invalid-name
 import os
 import re
+from pathlib import Path
 
 import pytest
 import salt.utils.files
@@ -115,7 +116,7 @@ def test_basic_prometheus_output_with_default_options(patch_dunders, job_ret, ca
                 "# TYPE salt_last_completed gauge",
                 "# HELP salt_version Version of installed Salt package",
                 "# TYPE salt_version gauge",
-                "salt_version {}".format(salt.version.__version__),
+                "salt_version {}".format(salt.version.__version__.split("rc", maxsplit=1)[0]),
                 "# HELP salt_version_tagged Version of installed Salt package as a tag",
                 "# TYPE salt_version_tagged gauge",
                 'salt_version_tagged{{salt_version="{}"}} 1.0'.format(salt.version.__version__),
@@ -199,7 +200,9 @@ def test_when_add_state_name_is_set_then_correct_output_should_be_in_correct_fil
                 "# TYPE salt_last_completed gauge",
                 "# HELP salt_version Version of installed Salt package",
                 "# TYPE salt_version gauge",
-                'salt_version{{state="{}"}} {}'.format(state_name, salt.version.__version__),
+                'salt_version{{state="{}"}} {}'.format(
+                    state_name, salt.version.__version__.split("rc", maxsplit=1)[0]
+                ),
                 "# HELP salt_version_tagged Version of installed Salt package as a tag",
                 "# TYPE salt_version_tagged gauge",
                 'salt_version_tagged{{salt_version="{}",state="{}"}} 1.0'.format(
@@ -263,7 +266,7 @@ def test_prometheus_output_with_show_failed_state_option_and_abort_state_ids(
         "# TYPE salt_last_completed gauge",
         "# HELP salt_version Version of installed Salt package",
         "# TYPE salt_version gauge",
-        "salt_version {}".format(salt.version.__version__),
+        "salt_version {}".format(salt.version.__version__.split("rc", maxsplit=1)[0]),
         "# HELP salt_version_tagged Version of installed Salt package as a tag",
         "# TYPE salt_version_tagged gauge",
         'salt_version_tagged{{salt_version="{}"}} 1.0'.format(salt.version.__version__),
@@ -381,7 +384,7 @@ def test_fail_comments_lengths(patch_dunders, job_ret, cache_dir, minion):
         "# TYPE salt_last_completed gauge",
         "# HELP salt_version Version of installed Salt package",
         "# TYPE salt_version gauge",
-        "salt_version {}".format(salt.version.__version__),
+        "salt_version {}".format(salt.version.__version__.split("rc", maxsplit=1)[0]),
         "# HELP salt_version_tagged Version of installed Salt package as a tag",
         "# TYPE salt_version_tagged gauge",
         'salt_version_tagged{{salt_version="{}"}} 1.0'.format(salt.version.__version__),
@@ -450,7 +453,7 @@ def test_fail_comments_lengths(patch_dunders, job_ret, cache_dir, minion):
         "# TYPE salt_last_completed gauge",
         "# HELP salt_version Version of installed Salt package",
         "# TYPE salt_version gauge",
-        "salt_version {}".format(salt.version.__version__),
+        "salt_version {}".format(salt.version.__version__.split("rc", maxsplit=1)[0]),
         "# HELP salt_version_tagged Version of installed Salt package as a tag",
         "# TYPE salt_version_tagged gauge",
         'salt_version_tagged{{salt_version="{}"}} 1.0'.format(salt.version.__version__),
@@ -529,3 +532,42 @@ def test_prometheus_output_with_raw_version(patch_dunders, job_ret, cache_dir, m
 
     assert salt_version == float_version
     assert salt_version_tagged == expected_version
+
+
+def test_requisite_handling(patch_dunders, cache_dir, minion):
+    job_ret = {
+        "fun": "state.apply",
+        "fun_args": ["prom_ret"],
+        "id": "d10-saltgit-01.example.local",
+        "jid": "20230312161844491819",
+        "out": "highstate",
+        "retcode": 2,
+        "return": {
+            "test_|-failure_|-failure_|-fail_without_changes": {
+                "__id__": "failure",
+                "__run_num__": 0,
+                "__sls__": "prom_ret",
+                "changes": {},
+                "comment": "Failure!",
+                "duration": 1.074,
+                "name": "failure",
+                "result": False,
+                "start_time": "16:18:44.771989",
+            },
+            "test_|-wont_run_|-wont_run_|-succeed_without_changes": {
+                "__run_num__": 1,
+                "__sls__": "prom_ret",
+                "changes": {},
+                "comment": "One or more requisite failed: prom_ret.failure",
+                "duration": 0.005,
+                "result": False,
+                "start_time": "16:18:44.773443",
+            },
+        },
+        "success": True,
+    }
+
+    prometheus_textfile.__opts__.update({"abort_state_ids": ["echo includeme"]})
+    prometheus_textfile.returner(job_ret)
+
+    assert Path(os.path.join(cache_dir, "prometheus_textfile", "salt.prom")).exists()

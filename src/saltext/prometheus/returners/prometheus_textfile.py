@@ -383,7 +383,7 @@ def returner(ret):
         )
         gauge_salt_aborted.set(0)
         for state_id, state_return in ret["return"].items():
-            if not state_return["result"] and state_return["__id__"] in opts["abort_state_ids"]:
+            if not state_return["result"] and state_return.get("__id__") in opts["abort_state_ids"]:
                 gauge_salt_aborted.set(1)
 
     if opts["add_state_name"]:
@@ -409,10 +409,17 @@ def returner(ret):
                 label_values.append(__grains__["saltversion"].split("+", maxsplit=1)[0])
         keys_dict = output.pop(key)
         gauge_keys = Gauge(key, keys_dict["help"], labels, registry=registry)
-        if label_values:
-            gauge_keys.labels(*label_values).set(keys_dict["value"])
-        else:
-            gauge_keys.set(keys_dict["value"])
+        try:
+            if label_values:
+                gauge_keys.labels(*label_values).set(keys_dict["value"])
+            else:
+                gauge_keys.set(keys_dict["value"])
+        except ValueError:
+            keys_dict["value"] = keys_dict["value"].split("rc", maxsplit=1)[0]
+            if label_values:
+                gauge_keys.labels(*label_values).set(keys_dict["value"])
+            else:
+                gauge_keys.set(keys_dict["value"])
 
     write_to_textfile(opts["filename"], registry)
     if not salt.utils.platform.is_windows():

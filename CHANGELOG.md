@@ -4,6 +4,15 @@ This project uses [Semantic Versioning](https://semver.org/) - MAJOR.MINOR.PATCH
 
 # Changelog
 
+Saltext.Prometheus 2.0.1 (2023-03-12)
+=====================================
+
+Fixed
+-----
+
+- Fix KeyError thrown when requiring state is not run (#20)
+
+
 Saltext.Prometheus 2.0.0 (2022-10-13)
 =====================================
 
