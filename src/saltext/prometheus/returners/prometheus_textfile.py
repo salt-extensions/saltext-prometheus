@@ -409,10 +409,17 @@ def returner(ret):
                 label_values.append(__grains__["saltversion"].split("+", maxsplit=1)[0])
         keys_dict = output.pop(key)
         gauge_keys = Gauge(key, keys_dict["help"], labels, registry=registry)
-        if label_values:
-            gauge_keys.labels(*label_values).set(keys_dict["value"])
-        else:
-            gauge_keys.set(keys_dict["value"])
+        try:
+            if label_values:
+                gauge_keys.labels(*label_values).set(keys_dict["value"])
+            else:
+                gauge_keys.set(keys_dict["value"])
+        except ValueError:
+            keys_dict["value"] = keys_dict["value"].split("rc", maxsplit=1)[0]
+            if label_values:
+                gauge_keys.labels(*label_values).set(keys_dict["value"])
+            else:
+                gauge_keys.set(keys_dict["value"])
 
     write_to_textfile(opts["filename"], registry)
     if not salt.utils.platform.is_windows():
