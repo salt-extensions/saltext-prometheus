@@ -383,7 +383,7 @@ def returner(ret):
         )
         gauge_salt_aborted.set(0)
         for state_id, state_return in ret["return"].items():
-            if not state_return["result"] and state_return["__id__"] in opts["abort_state_ids"]:
+            if not state_return["result"] and state_return.get("__id__") in opts["abort_state_ids"]:
                 gauge_salt_aborted.set(1)
 
     if opts["add_state_name"]:
