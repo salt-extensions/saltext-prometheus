@@ -426,7 +426,6 @@ def returner(ret):
         salt.modules.file.chown(opts["filename"], opts["uid"], opts["gid"])
         if opts["mode"]:
             try:
-                opts["mode"] = int(opts["mode"], base=8)
                 salt.modules.file.set_mode(opts["filename"], opts["mode"])
             except ValueError:
                 opts["mode"] = None
