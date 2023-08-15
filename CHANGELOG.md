@@ -11,6 +11,13 @@ This project uses [Semantic Versioning](https://semver.org/) - MAJOR.MINOR.PATCH
 - Fix salt deps by removing them (#22)
 
 
+# Saltext.Prometheus 2.0.2 (2023-03-13)
+
+### Fixed
+
+- Fix mode set to int octal instead of octal notation (#21)
+
+
 # Saltext.Prometheus 2.0.1 (2023-03-12)
 
 ### Fixed
