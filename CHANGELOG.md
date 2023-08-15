@@ -4,46 +4,43 @@ This project uses [Semantic Versioning](https://semver.org/) - MAJOR.MINOR.PATCH
 
 # Changelog
 
-Saltext.Prometheus 2.0.1 (2023-03-12)
-=====================================
+# Saltext.Prometheus 2.0.3 (2023-08-14)
 
-Fixed
------
+### Fixed
+
+- Fix salt deps by removing them (#22)
+
+
+# Saltext.Prometheus 2.0.1 (2023-03-12)
+
+### Fixed
 
 - Fix KeyError thrown when requiring state is not run (#20)
 
 
-Saltext.Prometheus 2.0.0 (2022-10-13)
-=====================================
+# Saltext.Prometheus 2.0.0 (2022-10-13)
 
-Added
------
+### Added
 
 - Add ability to use prometheus_client library (#2)
 
 
-Saltext.Prometheus 1.1.1 (2022-05-04)
-=====================================
+# Saltext.Prometheus 1.1.1 (2022-05-04)
 
-Added
------
+### Added
 
 - Hide raw version numbers to normalize data on release version (#6)
 
 
-Saltext.Prometheus 1.0.1 (2022-03-18)
-=====================================
+# Saltext.Prometheus 1.0.1 (2022-03-18)
 
-Fixed
------
+### Fixed
 
 - Fix textfile output to view None result as success (#3)
 
 
-Saltext.Prometheus 1.0.0 (2022-01-29)
-=====================================
+# Saltext.Prometheus 1.0.0 (2022-01-29)
 
-Added
------
+### Added
 
 - Initial version of Prometheus Text Exposition Format Returner
