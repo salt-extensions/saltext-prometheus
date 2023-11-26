@@ -33,8 +33,10 @@ Use an execution module like:
 
 .. code-block:: 
 
-    salt \* pkg.install saltext-prometheus
+    salt \* pip.install saltext-prometheus
+    
 
+Note: The extension can be installed and used on all minions or specific minions where reporting data is needed
 
 
 Verify Installation - (Optional)
@@ -52,7 +54,7 @@ You should see `saltext.prometheus` listed under Salt extensions.
 Getting Started
 ---------------
 
-After successfully installing the extension, you are prepared to execute Prometheus Salt extension modules.
+After successfully installing the extension, you are prepared to execute Prometheus Salt extension modules. 
 
 .. raw:: html
 
@@ -68,7 +70,7 @@ Create a test.sls file in directory /srv/salt
 
     /tmp/dummy.text:
         file.managed:
-            - content: |
+            - contents: |
                 helloworld
 
 

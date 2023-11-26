@@ -16,10 +16,9 @@ Prometheus and Salt
 ~~~~~~~~~~~~~~~~~~~
 
 The Prometheus tool is a widely-used open-source solution for monitoring and processing data. It provides a robust platform for real-time tracking of various system and application aspects.
-
 In contrast, Salt is a powerful automation tool that offers flexible and scalable infrastructure management, streamlining tasks like configuration management and remote execution.
 
-The Prometheus Salt extension helps integrate these tools by enhancing Salt's capabilities, catering specifically to Prometheus users' needs. This extension integrates seamlessly with Prometheus infrastructure, enabling effective monitoring and metrics gathering. 
+The Prometheus Salt extension helps integrate these tools by enhancing Salt's capabilities, catering specifically to Prometheus users' needs. This extension integrates seamlessly with Prometheus infrastructure, enabling effective monitoring and metrics gathering.
 
 
 Modules
@@ -43,6 +42,8 @@ To use the extension, you will need to provide a Salt state command and add a re
 Example usage command: ``salt \* state.apply test --return prometheus_textfile``
 
 By default, the output file is located in the following file location: ``/var/cache/salt/minion/prometheus_textfile/salt.prom``, but this can be changed via a configuration file.
+
+Note: The extension can be installed and used on all minions or specific minions where reporting data is needed
 
 **Example output file:**
 
@@ -111,7 +112,7 @@ Method 2: Using salt
     
   .. code-block:: bash
 
-    salt \* pkg.install saltext-prometheus
+    salt \* pip.install saltext-prometheus
 
 
 `Once the extension is installed, you can verify the installation, or proceed to use the extension in your environment.`
@@ -147,7 +148,7 @@ After successfully installing the extension, you are ready to execute Prometheus
 
     /tmp/dummy.text:
         file.managed:
-            - content: |
+            - contents: |
                 helloworld
 
 
