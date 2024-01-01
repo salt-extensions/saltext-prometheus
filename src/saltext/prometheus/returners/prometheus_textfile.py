@@ -364,12 +364,10 @@ def returner(ret):
         for state_id, state_return in ret["return"].items():
             if state_return["result"] is False:
                 failed_comment = state_return.get("comment", "").replace('"', "").replace("\n", " ")
-                # pylint: disable=whitespace-before-colon
                 label_values = [
                     state_id.split("_|-")[1],
                     failed_comment[0 : opts["fail_comment_length"]],
                 ]
-                # pylint: enable=whitespace-before-colon
                 if opts["add_state_name"]:
                     label_values.append(prom_state)
                 gauge_show_failed_states.labels(*label_values).set(1)
@@ -388,7 +386,7 @@ def returner(ret):
 
     if opts["add_state_name"]:
         old_name, ext = os.path.splitext(opts["filename"])
-        opts["filename"] = "{}-{}{}".format(old_name, prom_state, ext)
+        opts["filename"] = f"{old_name}-{prom_state}{ext}"
         log.debug(
             "Modified Prometheus filename from %s to %s",
             old_name + ext,

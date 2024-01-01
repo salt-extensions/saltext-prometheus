@@ -1,11 +1,30 @@
-Welcome to Prometheus Salt Extension Documentation!
-===================================================
+``saltext-prometheus``: Integrate Salt with Prometheus
+======================================================
+
+Salt Extension for interacting with Prometheus
 
 .. toctree::
   :maxdepth: 2
-  :caption: Contents:
+  :caption: Guides
+  :hidden:
 
-  all.rst
+  topics/installation
+
+.. toctree::
+  :maxdepth: 2
+  :caption: Provided Modules
+  :hidden:
+
+  ref/engines/index
+  ref/returners/index
+
+.. toctree::
+  :maxdepth: 2
+  :caption: Reference
+  :hidden:
+
+  changelog
+
 
 Indices and tables
 ==================

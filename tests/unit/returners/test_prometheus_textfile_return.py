@@ -116,10 +116,12 @@ def test_basic_prometheus_output_with_default_options(patch_dunders, job_ret, ca
                 "# TYPE salt_last_completed gauge",
                 "# HELP salt_version Version of installed Salt package",
                 "# TYPE salt_version gauge",
-                "salt_version {}".format(salt.version.__version__.split("rc", maxsplit=1)[0]),
+                "salt_version {}".format(  # pylint: disable=consider-using-f-string
+                    salt.version.__version__.split("rc", maxsplit=1)[0]
+                ),
                 "# HELP salt_version_tagged Version of installed Salt package as a tag",
                 "# TYPE salt_version_tagged gauge",
-                'salt_version_tagged{{salt_version="{}"}} 1.0'.format(salt.version.__version__),
+                f'salt_version_tagged{{salt_version="{salt.version.__version__}"}} 1.0',
             ]
         )
     )
@@ -169,43 +171,43 @@ def test_when_add_state_name_is_set_then_correct_output_should_be_in_correct_fil
             [
                 "# HELP salt_procs Number of salt minion processes running",
                 "# TYPE salt_procs gauge",
-                'salt_procs{{state="{}"}} 0.0'.format(state_name),
+                f'salt_procs{{state="{state_name}"}} 0.0',
                 "# HELP salt_states_succeeded Number of successful states in the run",
                 "# TYPE salt_states_succeeded gauge",
-                'salt_states_succeeded{{state="{}"}} 2.0'.format(state_name),
+                f'salt_states_succeeded{{state="{state_name}"}} 2.0',
                 "# HELP salt_states_failed Number of failed states in the run",
                 "# TYPE salt_states_failed gauge",
-                'salt_states_failed{{state="{}"}} 0.0'.format(state_name),
+                f'salt_states_failed{{state="{state_name}"}} 0.0',
                 "# HELP salt_states_changed Number of changed states in the run",
                 "# TYPE salt_states_changed gauge",
-                'salt_states_changed{{state="{}"}} 2.0'.format(state_name),
+                f'salt_states_changed{{state="{state_name}"}} 2.0',
                 "# HELP salt_states_total Total states in the run",
                 "# TYPE salt_states_total gauge",
-                'salt_states_total{{state="{}"}} 2.0'.format(state_name),
+                f'salt_states_total{{state="{state_name}"}} 2.0',
                 "# HELP salt_states_success_pct Percent of successful states in the run",
                 "# TYPE salt_states_success_pct gauge",
-                'salt_states_success_pct{{state="{}"}} 100.0'.format(state_name),
+                f'salt_states_success_pct{{state="{state_name}"}} 100.0',
                 "# HELP salt_states_failure_pct Percent of failed states in the run",
                 "# TYPE salt_states_failure_pct gauge",
-                'salt_states_failure_pct{{state="{}"}} 0.0'.format(state_name),
+                f'salt_states_failure_pct{{state="{state_name}"}} 0.0',
                 "# HELP salt_states_changed_pct Percent of changed states in the run",
                 "# TYPE salt_states_changed_pct gauge",
-                'salt_states_changed_pct{{state="{}"}} 100.0'.format(state_name),
+                f'salt_states_changed_pct{{state="{state_name}"}} 100.0',
                 "# HELP salt_elapsed_time Time spent for all operations during the state run",
                 "# TYPE salt_elapsed_time gauge",
-                'salt_elapsed_time{{state="{}"}} 13.695'.format(state_name),
+                f'salt_elapsed_time{{state="{state_name}"}} 13.695',
                 "# HELP salt_last_started Estimated time the state run started",
                 "# TYPE salt_last_started gauge",
                 "# HELP salt_last_completed Time of last state run completion",
                 "# TYPE salt_last_completed gauge",
                 "# HELP salt_version Version of installed Salt package",
                 "# TYPE salt_version gauge",
-                'salt_version{{state="{}"}} {}'.format(
+                'salt_version{{state="{}"}} {}'.format(  # pylint: disable=consider-using-f-string
                     state_name, salt.version.__version__.split("rc", maxsplit=1)[0]
                 ),
                 "# HELP salt_version_tagged Version of installed Salt package as a tag",
                 "# TYPE salt_version_tagged gauge",
-                'salt_version_tagged{{salt_version="{}",state="{}"}} 1.0'.format(
+                'salt_version_tagged{{salt_version="{}",state="{}"}} 1.0'.format(  # pylint: disable=consider-using-f-string
                     salt.version.__version__, state_name
                 ),
             ]
@@ -266,10 +268,12 @@ def test_prometheus_output_with_show_failed_state_option_and_abort_state_ids(
         "# TYPE salt_last_completed gauge",
         "# HELP salt_version Version of installed Salt package",
         "# TYPE salt_version gauge",
-        "salt_version {}".format(salt.version.__version__.split("rc", maxsplit=1)[0]),
+        "salt_version {}".format(  # pylint: disable=consider-using-f-string
+            salt.version.__version__.split("rc", maxsplit=1)[0]
+        ),
         "# HELP salt_version_tagged Version of installed Salt package as a tag",
         "# TYPE salt_version_tagged gauge",
-        'salt_version_tagged{{salt_version="{}"}} 1.0'.format(salt.version.__version__),
+        f'salt_version_tagged{{salt_version="{salt.version.__version__}"}} 1.0',
         "# HELP salt_failed Information regarding state with failure condition",
         "# TYPE salt_failed gauge",
         'salt_failed{state_comment="Command echo includeme run",state_id="echo includeme"} 1.0',
@@ -384,10 +388,12 @@ def test_fail_comments_lengths(patch_dunders, job_ret, cache_dir, minion):
         "# TYPE salt_last_completed gauge",
         "# HELP salt_version Version of installed Salt package",
         "# TYPE salt_version gauge",
-        "salt_version {}".format(salt.version.__version__.split("rc", maxsplit=1)[0]),
+        "salt_version {}".format(  # pylint: disable=consider-using-f-string
+            salt.version.__version__.split("rc", maxsplit=1)[0]
+        ),
         "# HELP salt_version_tagged Version of installed Salt package as a tag",
         "# TYPE salt_version_tagged gauge",
-        'salt_version_tagged{{salt_version="{}"}} 1.0'.format(salt.version.__version__),
+        f'salt_version_tagged{{salt_version="{salt.version.__version__}"}} 1.0',
         "# HELP salt_failed Information regarding state with failure condition",
         "# TYPE salt_failed gauge",
         'salt_failed{state_comment="Command echo includeme run",state_id="echo includeme"} 1.0',
@@ -453,10 +459,12 @@ def test_fail_comments_lengths(patch_dunders, job_ret, cache_dir, minion):
         "# TYPE salt_last_completed gauge",
         "# HELP salt_version Version of installed Salt package",
         "# TYPE salt_version gauge",
-        "salt_version {}".format(salt.version.__version__.split("rc", maxsplit=1)[0]),
+        "salt_version {}".format(  # pylint: disable=consider-using-f-string
+            salt.version.__version__.split("rc", maxsplit=1)[0]
+        ),
         "# HELP salt_version_tagged Version of installed Salt package as a tag",
         "# TYPE salt_version_tagged gauge",
-        'salt_version_tagged{{salt_version="{}"}} 1.0'.format(salt.version.__version__),
+        f'salt_version_tagged{{salt_version="{salt.version.__version__}"}} 1.0',
         "# HELP salt_failed Information regarding state with failure condition",
         "# TYPE salt_failed gauge",
         'salt_failed{state_comment="Command echo in",state_id="echo includeme"} 1.0',
