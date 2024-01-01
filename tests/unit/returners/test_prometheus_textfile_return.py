@@ -582,6 +582,7 @@ def test_requisite_handling(patch_dunders, cache_dir, minion):
     assert Path(os.path.join(cache_dir, "prometheus_textfile", "salt.prom")).exists()
 
 
+@pytest.mark.skip_on_windows(reason="mode setting not available on Windows")
 def test_mode_passed_to_set_mode(patch_dunders, cache_dir, job_ret, minion):
     mock_set_mode = MagicMock(return_value=True)
     prometheus_textfile.__opts__.update({"mode": "0644"})
