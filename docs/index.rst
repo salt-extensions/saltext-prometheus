@@ -3,12 +3,26 @@
 
 Salt Extension for interacting with Prometheus
 
+This guide will walk you through the process of installing and setting up the Prometheus Salt extension on your machine.
+
+
+What is Prometheus Salt Extension?
+==================================
+
+The Prometheus Salt Extension is a Salt extension module that provides features and functionality realated to Prometheus for easy plugin capabilities.
+
+
+Contents
+--------
+
 .. toctree::
   :maxdepth: 2
   :caption: Guides
   :hidden:
 
   topics/installation
+   quick_start
+   user_documentation
 
 .. toctree::
   :maxdepth: 2

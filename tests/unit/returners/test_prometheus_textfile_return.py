@@ -8,6 +8,7 @@ import salt.utils.files
 import salt.version
 import saltext.prometheus.returners.prometheus_textfile as prometheus_textfile
 
+from tests.support.mock import MagicMock
 from tests.support.mock import patch
 
 
@@ -579,3 +580,13 @@ def test_requisite_handling(patch_dunders, cache_dir, minion):
     prometheus_textfile.returner(job_ret)
 
     assert Path(os.path.join(cache_dir, "prometheus_textfile", "salt.prom")).exists()
+
+
+def test_mode_passed_to_set_mode(patch_dunders, cache_dir, job_ret, minion):
+    mock_set_mode = MagicMock(return_value=True)
+    prometheus_textfile.__opts__.update({"mode": "0644"})
+    with patch("salt.modules.file.set_mode", mock_set_mode):
+        prometheus_textfile.returner(job_ret)
+    mock_set_mode.assert_called_with(
+        os.path.join(cache_dir, "prometheus_textfile", "salt.prom"), "0644"
+    )
