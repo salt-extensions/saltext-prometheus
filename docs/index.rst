@@ -20,9 +20,9 @@ Contents
   :caption: Guides
   :hidden:
 
+  topics/quick_start
   topics/installation
-   quick_start
-   user_documentation
+  topics/user_documentation
 
 .. toctree::
   :maxdepth: 2
