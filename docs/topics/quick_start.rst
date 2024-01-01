@@ -19,7 +19,7 @@ Several methods are available for installing the Prometheus Salt extension:
 
 - **Method 1: Using pip**
 
-.. code-block:: 
+.. code-block::
 
     pip install saltext-prometheus
 
@@ -31,10 +31,10 @@ Several methods are available for installing the Prometheus Salt extension:
 
 Use an execution module like:
 
-.. code-block:: 
+.. code-block::
 
     salt \* pip.install saltext-prometheus
-    
+
 
 Note: The extension can be installed and used on all minions or specific minions where reporting data is needed
 
@@ -44,8 +44,8 @@ Verify Installation - (Optional)
 
 Verify that the extension is installed
 
-.. code-block:: 
-    
+.. code-block::
+
     salt --versions-report
 
 You should see `saltext.prometheus` listed under Salt extensions.
@@ -54,15 +54,15 @@ You should see `saltext.prometheus` listed under Salt extensions.
 Getting Started
 ---------------
 
-After successfully installing the extension, you are prepared to execute Prometheus Salt extension modules. 
+After successfully installing the extension, you are prepared to execute Prometheus Salt extension modules.
 
 .. raw:: html
 
    <br />
 
-**Example:** Apply a test state using the prometheus_textfile as the returner 
+**Example:** Apply a test state using the prometheus_textfile as the returner
 
-Create a test.sls file in directory /srv/salt 
+Create a test.sls file in directory /srv/salt
 
 /srv/salt/test.sls
 
@@ -76,8 +76,8 @@ Create a test.sls file in directory /srv/salt
 
 Execute the following command
 
-.. code-block:: 
-    
+.. code-block::
+
     salt \* state.apply test --return prometheus_textfile
 
 
@@ -85,7 +85,7 @@ You should see an output file created on the minion machine (default location: *
 
 **Example output file:**
 
-    .. code-block:: 
+    .. code-block::
 
         salt_last_completed 1.698364953e+09
         # HELP salt_version Version of installed Salt package

@@ -1,5 +1,7 @@
-Welcome to Prometheus Salt Extension Documentation!
-===================================================
+``saltext-prometheus``: Integrate Salt with Prometheus
+======================================================
+
+Salt Extension for interacting with Prometheus
 
 This guide will walk you through the process of installing and setting up the Prometheus Salt extension on your machine.
 
@@ -14,10 +16,33 @@ Contents
 --------
 
 .. toctree::
-   :maxdepth: 2
-   :glob:
+  :maxdepth: 2
+  :caption: Guides
+  :hidden:
 
-   quick_start
-   user_documentation
-   all
-   
+  topics/quick_start
+  topics/installation
+  topics/user_documentation
+
+.. toctree::
+  :maxdepth: 2
+  :caption: Provided Modules
+  :hidden:
+
+  ref/engines/index
+  ref/returners/index
+
+.. toctree::
+  :maxdepth: 2
+  :caption: Reference
+  :hidden:
+
+  changelog
+
+
+Indices and tables
+==================
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`

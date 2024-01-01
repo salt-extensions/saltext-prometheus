@@ -35,7 +35,7 @@ Prometheus textfile module is a custom returner module.
     **What's a salt returner module?** A returner module defines the method and format in which the results of Salt execution commands are transmitted from the minions back to the master.
 
 
-This module is used to output a `Text Exposition Format <https://prometheus.io/docs/instrumenting/exposition_formats/#text-format-example>`_ file on the minion. The output includes salt specific metrics gathered from the minion. The output is formatted to a file that can be ingested by Prometheus infrastructure for monitoring purposes. See detailed module documentation: :ref:`prometheus_textfile`
+This module is used to output a `Text Exposition Format <https://prometheus.io/docs/instrumenting/exposition_formats/#text-format-example>`_ file on the minion. The output includes salt specific metrics gathered from the minion. The output is formatted to a file that can be ingested by Prometheus infrastructure for monitoring purposes.
 
 To use the extension, you will need to provide a Salt state command and add a return flag pointed to the `prometheus_textfile` module. You can also utilize different configuration files to set the returner module.
 
@@ -105,11 +105,11 @@ Method 1: Using pip
    <br />
 
 
-Method 2: Using salt 
+Method 2: Using salt
 ~~~~~~~~~~~~~~~~~~~~
 1. Verify salt is installed on the target machine
 2. Run the following command to install the Prometheus Salt extension:
-    
+
   .. code-block:: bash
 
     salt \* pip.install saltext-prometheus
@@ -121,12 +121,12 @@ Method 2: Using salt
 
 Verify that the extension is installed by running the following command:
 
-.. code-block:: 
-    
+.. code-block::
+
     salt --versions-report
 
 
-You should see `saltext.prometheus` listed under Salt extensions. 
+You should see `saltext.prometheus` listed under Salt extensions.
 
 
 
@@ -138,7 +138,7 @@ After successfully installing the extension, you are ready to execute Prometheus
 
    <br />
 
-**Example:** Apply a test state using the prometheus_textfile as the returner 
+**Example:** Apply a test state using the prometheus_textfile as the returner
 
 1. Create a test.sls file in the directory /srv/salt
 
@@ -154,8 +154,8 @@ After successfully installing the extension, you are ready to execute Prometheus
 
 2. Execute the following command:
 
-.. code-block:: 
-    
+.. code-block::
+
     salt \* state.apply test --return prometheus_textfile
 
 
@@ -163,7 +163,7 @@ After successfully installing the extension, you are ready to execute Prometheus
 
 **Example output file:**
 
-    .. code-block:: 
+    .. code-block::
 
         salt_last_completed 1.698364953e+09
         # HELP salt_version Version of installed Salt package
@@ -194,9 +194,9 @@ In directory **/etc/salt/minion.d** we created a file called **prometheus.conf**
 `The example configuration sets the return to the prometheus_textfile and sets the prometheus_textfile location to a custom location.`
 
 
-**Configurable Options**                                        
+**Configurable Options**
 
-Prometheus Textfile: See module documentation - :ref:`prometheus_textfile`
+Prometheus Textfile: See module documentation
 
 
 Uninstall
@@ -204,7 +204,6 @@ Uninstall
 
 You can uninstall the Prometheus Salt Extension using pip:
 
-.. code-block:: 
+.. code-block::
 
   pip uninstall prometheus-salt
-
