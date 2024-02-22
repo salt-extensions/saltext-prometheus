@@ -373,16 +373,31 @@ def returner(ret):
                 gauge_show_failed_states.labels(*label_values).set(1)
 
     if opts["abort_state_ids"]:
+        labels = []
+        label_values = []
+        if opts["add_state_name"]:
+            labels.append("state")
+            label_values.append(prom_state)
         if not isinstance(opts["abort_state_ids"], list):
             opts["abort_state_ids"] = [item.strip() for item in opts["abort_state_ids"].split(",")]
 
-        gauge_salt_aborted = Gauge(
-            "salt_aborted", "Flag to show that a specific abort state failed", registry=registry
-        )
-        gauge_salt_aborted.set(0)
+        aborted_value = 0
         for state_id, state_return in ret["return"].items():
             if not state_return["result"] and state_return.get("__id__") in opts["abort_state_ids"]:
-                gauge_salt_aborted.set(1)
+                aborted_value = 1
+                labels.append("state_id")
+                label_values.append(state_id.split("_|-")[1])
+
+        gauge_salt_aborted = Gauge(
+            "salt_aborted",
+            "Flag to show that a specific abort state failed",
+            labels,
+            registry=registry,
+        )
+        if label_values:
+            gauge_salt_aborted.labels(*label_values).set(aborted_value)
+        else:
+            gauge_salt_aborted.set(aborted_value)
 
     if opts["add_state_name"]:
         old_name, ext = os.path.splitext(opts["filename"])
