@@ -6,8 +6,8 @@ from pathlib import Path
 import pytest
 import salt.utils.files
 import salt.version
-import saltext.prometheus.returners.prometheus_textfile as prometheus_textfile
 
+import saltext.prometheus.returners.prometheus_textfile as prometheus_textfile
 from tests.support.mock import MagicMock
 from tests.support.mock import patch
 

@@ -3,11 +3,19 @@
 ## Our Pledge
 
 We as members, contributors, and leaders pledge to make participation in Salt
+<<<<<<< before updating
 Extension Modules for Prometheus project and our community a harassment-free
 experience for everyone, regardless of age, body size, visible or invisible
 disability, ethnicity, sex characteristics, gender identity and expression,
 level of experience, education, socio-economic status, nationality, personal
 appearance, race, religion, or sexual identity and orientation.
+=======
+Extension Modules for Prometheus project and our community a
+harassment-free experience for everyone, regardless of age, body size, visible
+or invisible disability, ethnicity, sex characteristics, gender identity and
+expression, level of experience, education, socio-economic status, nationality,
+personal appearance, race, religion, or sexual identity and orientation.
+>>>>>>> after updating
 
 We pledge to act and interact in ways that contribute to an open, welcoming,
 diverse, inclusive, and healthy community.
@@ -59,7 +67,11 @@ representative at an online or offline event.
 ## Enforcement
 
 Instances of abusive, harassing, or otherwise unacceptable behavior may be
+<<<<<<< before updating
 reported to the community leaders responsible for enforcement at devops@eitr.tech.
+=======
+reported to the community leaders responsible for enforcement.
+>>>>>>> after updating
 All complaints will be reviewed and investigated promptly and fairly.
 
 All community leaders are obligated to respect the privacy and security of the

@@ -1,3 +1,7 @@
+<<<<<<< before updating
+=======
+---
+>>>>>>> after updating
 name: Tagged Releases
 
 on:
@@ -16,17 +20,29 @@ jobs:
 
       - name: Extract tag name
         id: get_version
+<<<<<<< before updating
         run: echo "::set-output name=version::$(echo ${GITHUB_REF#refs/tags/v})"
+=======
+        run: echo "version=${GITHUB_REF#refs/tags/v}" >> "$GITHUB_OUTPUT"
+>>>>>>> after updating
 
   call_central_workflow:
     needs: get_tag_version
     uses: salt-extensions/central-artifacts/.github/workflows/ci.yml@main
     with:
+<<<<<<< before updating
       setup-vault: true
+=======
+      deploy-docs: true
+>>>>>>> after updating
       release: true
       version: ${{ needs.get_tag_version.outputs.version }}
     permissions:
       contents: write
       id-token: write
+<<<<<<< before updating
+=======
+      pages: write
+>>>>>>> after updating
       pull-requests: read
     secrets: inherit

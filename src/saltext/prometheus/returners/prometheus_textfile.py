@@ -123,6 +123,7 @@ is enabled.
     prometheus_textfile.raw_version: true
 
 """
+
 import logging
 import os
 import time
