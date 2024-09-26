@@ -102,4 +102,4 @@ appreciate every contribution!
 [PRs]: https://github.com/salt-extensions/saltext-prometheus/pulls
 [discussions]: https://github.com/salt-extensions/saltext-prometheus/discussions
 [comments]: https://conventionalcomments.org/
-[docs]: https://salt-extensions.github.io/saltext-prometheus/
+[docs]: https://saltext-prometheus.readthedocs.io/en/latest/

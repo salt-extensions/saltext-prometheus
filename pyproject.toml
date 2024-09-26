@@ -47,7 +47,7 @@ content-type = "text/markdown"
 
 [project.urls]
 Homepage = "https://github.com/salt-extensions/saltext-prometheus"
-Documentation = "https://salt-extensions.github.io/saltext-prometheus/"
+Documentation = "https://saltext-prometheus.readthedocs.io/en/latest/"
 Source = "https://github.com/salt-extensions/saltext-prometheus"
 Tracker = "https://github.com/salt-extensions/saltext-prometheus/issues"
 

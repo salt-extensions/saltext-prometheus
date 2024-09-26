@@ -6,8 +6,8 @@ author: EITR Technologies, LLC
 author_email: devops@eitr.tech
 coc_contact: devops@eitr.tech
 copyright_begin: 2022
-deploy_docs: rolling
-docs_url: https://salt-extensions.github.io/saltext-prometheus/
+deploy_docs: never
+docs_url: https://saltext-prometheus.readthedocs.io/en/latest/
 integration_name: Prometheus
 license: apache
 loaders:
