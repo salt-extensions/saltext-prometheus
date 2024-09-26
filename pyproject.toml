@@ -28,6 +28,8 @@ classifiers = [
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
     "License :: OSI Approved :: Apache Software License",
@@ -45,6 +47,7 @@ content-type = "text/markdown"
 
 [project.urls]
 Homepage = "https://github.com/salt-extensions/saltext-prometheus"
+Documentation = "https://salt-extensions.github.io/saltext-prometheus/"
 Source = "https://github.com/salt-extensions/saltext-prometheus"
 Tracker = "https://github.com/salt-extensions/saltext-prometheus/issues"
 

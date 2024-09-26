@@ -42,10 +42,10 @@ dist = distribution("saltext.prometheus")
 
 # -- Project information -----------------------------------------------------
 this_year = datetime.datetime.today().year
-if this_year == 2024:
-    copyright_year = "2024"
+if this_year == 2022:
+    copyright_year = "2022"
 else:
-    copyright_year = f"2024 - {this_year}"
+    copyright_year = f"2022 - {this_year}"
 project = dist.metadata["Summary"]
 author = dist.metadata.get("Author")
 

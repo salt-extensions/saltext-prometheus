@@ -12,7 +12,7 @@ to [Salt's security guide][security].
 ## User Documentation
 
 For setup and usage instructions, please refer to the
-module docstrings (for now, documentation is coming!).
+[User Documentation][docs].
 
 ## Contributing
 
@@ -102,4 +102,4 @@ appreciate every contribution!
 [PRs]: https://github.com/salt-extensions/saltext-prometheus/pulls
 [discussions]: https://github.com/salt-extensions/saltext-prometheus/discussions
 [comments]: https://conventionalcomments.org/
-[docs]: https://docs.saltproject.io/salt/extensions/saltext-prometheus/en/latest/index.html
+[docs]: https://salt-extensions.github.io/saltext-prometheus/

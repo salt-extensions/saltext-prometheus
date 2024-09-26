@@ -4,16 +4,16 @@ _commit: 0.4.4
 _src_path: https://github.com/lkubb/salt-extension-copier
 author: EITR Technologies, LLC
 author_email: devops@eitr.tech
-coc_contact: ''
-copyright_begin: 2024
+coc_contact: devops@eitr.tech
+copyright_begin: 2022
 deploy_docs: rolling
-docs_url: ''
+docs_url: https://salt-extensions.github.io/saltext-prometheus/
 integration_name: Prometheus
 license: apache
 loaders:
   - engine
   - returner
-max_salt_version: 3006
+max_salt_version: 3007
 no_saltext_namespace: false
 package_name: prometheus
 project_name: prometheus
