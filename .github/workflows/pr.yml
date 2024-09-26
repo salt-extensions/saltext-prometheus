@@ -1,7 +1,4 @@
-<<<<<<< before updating
-=======
 ---
->>>>>>> after updating
 name: Pull Request or Push
 
 on:
@@ -17,15 +14,9 @@ jobs:
     name: CI
     uses: salt-extensions/central-artifacts/.github/workflows/ci.yml@main
     with:
-<<<<<<< before updating
-      setup-vault: true
-    permissions:
-      contents: write
-=======
       deploy-docs: true
     permissions:
       contents: write
       id-token: write
       pages: write
->>>>>>> after updating
       pull-requests: read

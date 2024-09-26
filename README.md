@@ -11,13 +11,8 @@ to [Salt's security guide][security].
 
 ## User Documentation
 
-<<<<<<< before updating
-This README is more for contributing to the project. If you just want to get
-started, check out the [User Documentation][docs].
-=======
 For setup and usage instructions, please refer to the
 module docstrings (for now, documentation is coming!).
->>>>>>> after updating
 
 ## Contributing
 
@@ -31,37 +26,6 @@ of Salt extension development, including [writing tests][writing-tests], [runnin
 
 To get started contributing, first clone this repository (or your fork):
 
-<<<<<<< before updating
-    # Clone the repo
-    git clone --origin salt git@github.com:salt-extensions/saltext-prometheus.git
-
-    # Change to the repo dir
-    cd saltext-prometheus
-
-    # Create a new venv
-    python3 -m venv env --prompt salt-ext-prom
-    source env/bin/activate
-
-    # On mac, you may need to upgrade pip
-    python -m pip install --upgrade pip
-
-    # On WSL or some flavors of linux you may need to install the `enchant`
-    # library in order to build the docs
-    sudo apt-get install -y enchant
-
-    # Install extension + test/dev/doc dependencies into your environment
-    python -m pip install -e .\[tests,dev,docs\]
-
-    # Run tests!
-    python -m nox -e tests-3
-
-    # skip requirements install for next time
-    export SKIP_REQUIREMENTS_INSTALL=1
-
-    # Build the docs, serve, and view in your web browser:
-    python -m nox -e docs && (cd docs/_build/html; python -m webbrowser localhost:8000; python -m http.server; cd -)
-
-=======
 ```bash
 # Clone the repo
 git clone --origin upstream git@github.com:salt-extensions/saltext-prometheus.git
@@ -99,7 +63,6 @@ set your fork as the `origin` remote now:
 ```bash
 git remote add origin git@github.com:<your_fork>.git
 ```
->>>>>>> after updating
 
 Ensure you followed the [first steps][first-steps] and commit your changes, fixing any
 failing `pre-commit` hooks. Then push the feature branch to your fork and submit a PR.
