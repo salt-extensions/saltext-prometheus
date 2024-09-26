@@ -123,6 +123,7 @@ is enabled.
     prometheus_textfile.raw_version: true
 
 """
+
 import logging
 import os
 import time
@@ -218,7 +219,7 @@ def _count_minion_procs(proc_name="salt-minion", match_exe=False, exe=None):
     return len(proclist)
 
 
-def returner(ret):
+def returner(ret):  # pylint: disable=too-many-statements
     """
     Write Prometheus metrics to a file on the minion.
     """
@@ -234,7 +235,7 @@ def returner(ret):
             ", ".join(state_functions),
             ret["fun"],
         )
-        return
+        return None
 
     opts = _get_options(ret)
 
@@ -253,7 +254,7 @@ def returner(ret):
             continue
         if fun_arg.lower() == "test=true":
             log.info("The prometheus_textfile returner is not enabled in Test mode.")
-            return
+            return None
         if opts["add_state_name"] and fun_arg.lower().startswith("prom_textfile_state="):
             prom_state = "".join(fun_arg.split("=")[1:])
             log.debug("Prometheus text file returner state name: %s", prom_state)
@@ -265,7 +266,7 @@ def returner(ret):
             os.makedirs(out_dir)
         except OSError:
             log.error("Could not create directory for prometheus output: %s", out_dir)
-            return
+            return None
 
     success = 0
     failure = 0
@@ -284,7 +285,7 @@ def returner(ret):
 
     if not total:
         log.error("Total states run equals 0. There may be something wrong...")
-        return
+        return None
 
     salt_procs = _count_minion_procs(
         proc_name=opts["proc_name"],

@@ -1,6 +1,6 @@
 Thanks for your interest in contributing to the Salt Extension Modules for
-Prometheus! We welcome any contribution, large or small - from adding a new
-feature to fixing a single letter typo.
+Prometheus! We welcome any contribution, large or small - from
+adding a new feature to fixing a single letter typo.
 
 This is a companion to the Salt Project and the [Salt Contributing
 Guide][salt-contributing] should be considered the default for this project.

@@ -1,15 +1,14 @@
-# pylint: disable=unused-argument,invalid-name
 import os
 import re
 from pathlib import Path
+from unittest.mock import MagicMock
+from unittest.mock import patch
 
 import pytest
 import salt.utils.files
 import salt.version
-import saltext.prometheus.returners.prometheus_textfile as prometheus_textfile
 
-from tests.support.mock import MagicMock
-from tests.support.mock import patch
+from saltext.prometheus.returners import prometheus_textfile
 
 
 @pytest.fixture()
@@ -518,6 +517,7 @@ def test_prometheus_output_with_raw_version(job_ret, cache_dir, opts):
     expected_version = "3004+12.g557e6cc0fc"
     short_version = expected_version.split("+", maxsplit=1)[0]
     float_version = str(float(short_version))
+    salt_version = salt_version_tagged = None
 
     # raw_version == False
     with patch(

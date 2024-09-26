@@ -3,7 +3,6 @@ import os.path
 import subprocess
 from pathlib import Path
 
-
 repo_path = Path(subprocess.check_output(["git", "rev-parse", "--show-toplevel"]).decode().strip())
 src_dir = repo_path / "src" / "saltext" / "prometheus"
 doc_dir = repo_path / "docs"
@@ -34,9 +33,14 @@ def write_module(rst_path, path, use_virtualname=True):
         virtualname = "``" + _find_virtualname(path) + "``"
     else:
         virtualname = make_import_path(path)
+    header_len = len(virtualname)
+    # The check-merge-conflict pre-commit hook chokes here:
+    # https://github.com/pre-commit/pre-commit-hooks/issues/100
+    if header_len == 7:
+        header_len += 1
     module_contents = f"""\
 {virtualname}
-{'='*len(virtualname)}
+{'='*header_len}
 
 .. automodule:: {make_import_path(path)}
     :members:
