@@ -123,9 +123,10 @@ def test_basic_prometheus_output_with_default_options(job_ret, cache_dir, opts):
         )
     )
 
-    with patch(
-        "saltext.prometheus.returners.prometheus_textfile.__opts__", opts, create=True
-    ), patch("saltext.prometheus.returners.prometheus_textfile.__salt__", {}, create=True):
+    with (
+        patch("saltext.prometheus.returners.prometheus_textfile.__opts__", opts, create=True),
+        patch("saltext.prometheus.returners.prometheus_textfile.__salt__", {}, create=True),
+    ):
         prometheus_textfile.returner(job_ret)
 
     with salt.utils.files.fopen(
@@ -210,9 +211,10 @@ def test_when_add_state_name_is_set_then_correct_output_should_be_in_correct_fil
             ]
         )
     )
-    with patch(
-        "saltext.prometheus.returners.prometheus_textfile.__opts__", opts, create=True
-    ), patch("saltext.prometheus.returners.prometheus_textfile.__salt__", {}, create=True):
+    with (
+        patch("saltext.prometheus.returners.prometheus_textfile.__opts__", opts, create=True),
+        patch("saltext.prometheus.returners.prometheus_textfile.__salt__", {}, create=True),
+    ):
         prometheus_textfile.returner(job_ret)
 
     with salt.utils.files.fopen(os.path.join(cache_dir, expected_filename)) as prom_file:
@@ -282,9 +284,10 @@ def test_prometheus_output_with_show_failed_state_option_and_abort_state_ids(
     # Test one failed state
     expected = "\n".join(sorted(promfile_lines))
 
-    with patch(
-        "saltext.prometheus.returners.prometheus_textfile.__opts__", opts, create=True
-    ), patch("saltext.prometheus.returners.prometheus_textfile.__salt__", {}, create=True):
+    with (
+        patch("saltext.prometheus.returners.prometheus_textfile.__opts__", opts, create=True),
+        patch("saltext.prometheus.returners.prometheus_textfile.__salt__", {}, create=True),
+    ):
         prometheus_textfile.returner(job_ret)
 
     with salt.utils.files.fopen(
@@ -312,9 +315,10 @@ def test_prometheus_output_with_show_failed_state_option_and_abort_state_ids(
     )
     expected = "\n".join(sorted(promfile_lines))
 
-    with patch(
-        "saltext.prometheus.returners.prometheus_textfile.__opts__", opts, create=True
-    ), patch("saltext.prometheus.returners.prometheus_textfile.__salt__", {}, create=True):
+    with (
+        patch("saltext.prometheus.returners.prometheus_textfile.__opts__", opts, create=True),
+        patch("saltext.prometheus.returners.prometheus_textfile.__salt__", {}, create=True),
+    ):
         prometheus_textfile.returner(job_ret)
 
     with salt.utils.files.fopen(
@@ -341,9 +345,10 @@ def test_prometheus_output_with_show_failed_state_option_and_abort_state_ids(
         ]
     )
     expected = "\n".join(sorted(promfile_lines))
-    with patch(
-        "saltext.prometheus.returners.prometheus_textfile.__opts__", opts, create=True
-    ), patch("saltext.prometheus.returners.prometheus_textfile.__salt__", {}, create=True):
+    with (
+        patch("saltext.prometheus.returners.prometheus_textfile.__opts__", opts, create=True),
+        patch("saltext.prometheus.returners.prometheus_textfile.__salt__", {}, create=True),
+    ):
         prometheus_textfile.returner(job_ret)
 
     with salt.utils.files.fopen(
@@ -418,9 +423,10 @@ def test_fail_comments_lengths(job_ret, cache_dir, opts):
     job_ret["return"]["cmd_|-echo includeme_|-echo includeme_|-run"]["result"] = False
     job_ret["return"]["cmd_|-echo applyme_|-echo applyme_|-run"]["result"] = False
 
-    with patch(
-        "saltext.prometheus.returners.prometheus_textfile.__opts__", opts, create=True
-    ), patch("saltext.prometheus.returners.prometheus_textfile.__salt__", {}, create=True):
+    with (
+        patch("saltext.prometheus.returners.prometheus_textfile.__opts__", opts, create=True),
+        patch("saltext.prometheus.returners.prometheus_textfile.__salt__", {}, create=True),
+    ):
         prometheus_textfile.returner(job_ret)
 
     with salt.utils.files.fopen(
@@ -492,9 +498,10 @@ def test_fail_comments_lengths(job_ret, cache_dir, opts):
     job_ret["return"]["cmd_|-echo includeme_|-echo includeme_|-run"]["result"] = False
     job_ret["return"]["cmd_|-echo applyme_|-echo applyme_|-run"]["result"] = False
 
-    with patch(
-        "saltext.prometheus.returners.prometheus_textfile.__opts__", opts, create=True
-    ), patch("saltext.prometheus.returners.prometheus_textfile.__salt__", {}, create=True):
+    with (
+        patch("saltext.prometheus.returners.prometheus_textfile.__opts__", opts, create=True),
+        patch("saltext.prometheus.returners.prometheus_textfile.__salt__", {}, create=True),
+    ):
         prometheus_textfile.returner(job_ret)
 
     with salt.utils.files.fopen(
@@ -520,12 +527,14 @@ def test_prometheus_output_with_raw_version(job_ret, cache_dir, opts):
     salt_version = salt_version_tagged = None
 
     # raw_version == False
-    with patch(
-        "saltext.prometheus.returners.prometheus_textfile.__opts__", opts, create=True
-    ), patch("saltext.prometheus.returners.prometheus_textfile.__salt__", {}, create=True), patch(
-        "saltext.prometheus.returners.prometheus_textfile.__grains__",
-        {"saltversion": expected_version},
-        create=True,
+    with (
+        patch("saltext.prometheus.returners.prometheus_textfile.__opts__", opts, create=True),
+        patch("saltext.prometheus.returners.prometheus_textfile.__salt__", {}, create=True),
+        patch(
+            "saltext.prometheus.returners.prometheus_textfile.__grains__",
+            {"saltversion": expected_version},
+            create=True,
+        ),
     ):
         prometheus_textfile.returner(job_ret)
 
@@ -546,12 +555,14 @@ def test_prometheus_output_with_raw_version(job_ret, cache_dir, opts):
 
     # raw_version == True
     opts.update({"raw_version": True})
-    with patch(
-        "saltext.prometheus.returners.prometheus_textfile.__opts__", opts, create=True
-    ), patch("saltext.prometheus.returners.prometheus_textfile.__salt__", {}, create=True), patch(
-        "saltext.prometheus.returners.prometheus_textfile.__grains__",
-        {"saltversion": expected_version},
-        create=True,
+    with (
+        patch("saltext.prometheus.returners.prometheus_textfile.__opts__", opts, create=True),
+        patch("saltext.prometheus.returners.prometheus_textfile.__salt__", {}, create=True),
+        patch(
+            "saltext.prometheus.returners.prometheus_textfile.__grains__",
+            {"saltversion": expected_version},
+            create=True,
+        ),
     ):
         prometheus_textfile.returner(job_ret)
 
@@ -605,9 +616,10 @@ def test_requisite_handling(cache_dir, opts):
     }
 
     opts.update({"abort_state_ids": ["echo includeme"]})
-    with patch(
-        "saltext.prometheus.returners.prometheus_textfile.__opts__", opts, create=True
-    ), patch("saltext.prometheus.returners.prometheus_textfile.__salt__", {}, create=True):
+    with (
+        patch("saltext.prometheus.returners.prometheus_textfile.__opts__", opts, create=True),
+        patch("saltext.prometheus.returners.prometheus_textfile.__salt__", {}, create=True),
+    ):
         prometheus_textfile.returner(job_ret)
 
     assert Path(os.path.join(cache_dir, "prometheus_textfile", "salt.prom")).exists()
@@ -617,10 +629,10 @@ def test_requisite_handling(cache_dir, opts):
 def test_mode_passed_to_set_mode(cache_dir, job_ret, opts):
     mock_set_mode = MagicMock(return_value=True)
     opts.update({"mode": "0644"})
-    with patch(
-        "saltext.prometheus.returners.prometheus_textfile.__opts__", opts, create=True
-    ), patch("saltext.prometheus.returners.prometheus_textfile.__salt__", {}, create=True), patch(
-        "salt.modules.file.set_mode", mock_set_mode
+    with (
+        patch("saltext.prometheus.returners.prometheus_textfile.__opts__", opts, create=True),
+        patch("saltext.prometheus.returners.prometheus_textfile.__salt__", {}, create=True),
+        patch("salt.modules.file.set_mode", mock_set_mode),
     ):
         prometheus_textfile.returner(job_ret)
     mock_set_mode.assert_called_with(
@@ -705,9 +717,10 @@ def test_add_state_name_adds_salt_aborted_label(
             ]
         )
     )
-    with patch(
-        "saltext.prometheus.returners.prometheus_textfile.__opts__", opts, create=True
-    ), patch("saltext.prometheus.returners.prometheus_textfile.__salt__", {}, create=True):
+    with (
+        patch("saltext.prometheus.returners.prometheus_textfile.__opts__", opts, create=True),
+        patch("saltext.prometheus.returners.prometheus_textfile.__salt__", {}, create=True),
+    ):
         prometheus_textfile.returner(job_ret)
 
     with salt.utils.files.fopen(os.path.join(cache_dir, expected_filename)) as prom_file:
