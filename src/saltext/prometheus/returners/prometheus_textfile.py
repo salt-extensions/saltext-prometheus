@@ -89,6 +89,14 @@ particular caused a failure condition on a host and whether it is critical.
 
     prometheus_textfile.show_failed_states: true
 
+When show_failed_state is enabled, the salt_failed metric will inclue only the
+state ID and state comment. If you wish to include the sls file name, set the
+following option in the configuration file:
+
+.. code-block:: yaml
+
+    prometheus_textfile.add_sls_name: True
+
 An additional way of viewing failure conditions is through the
 ``abort_state_ids`` option. If this option is used, a state ID or list of state
 IDs can be provided to indicate an "abort" condition. This allows the user to
@@ -176,6 +184,7 @@ def _get_options(ret):
         "add_state_name": False,
         "abort_state_ids": None,
         "show_failed_states": False,
+        "add_sls_name": False,
         "raw_version": False,
         "fail_comment_length": None,
     }
@@ -190,6 +199,7 @@ def _get_options(ret):
         "add_state_name": "add_state_name",
         "abort_state_ids": "abort_state_ids",
         "show_failed_states": "show_failed_states",
+        "add_sls_name": "add_sls_name",
         "raw_version": "raw_version",
         "fail_comment_length": "fail_comment_length",
     }
@@ -356,6 +366,8 @@ def returner(ret):  # pylint: disable=too-many-statements
         labels = ["state_id", "state_comment"]
         if opts["add_state_name"]:
             labels.append("state")
+        if opts["add_sls_name"]:
+            labels.append("sls")
         gauge_show_failed_states = Gauge(
             "salt_failed",
             "Information regarding state with failure condition",
@@ -371,6 +383,8 @@ def returner(ret):  # pylint: disable=too-many-statements
                 ]
                 if opts["add_state_name"]:
                     label_values.append(prom_state)
+                if opts["add_sls_name"]:
+                    label_values.append(state_return.get("__sls__", ""))
                 gauge_show_failed_states.labels(*label_values).set(1)
 
     if opts["abort_state_ids"]:

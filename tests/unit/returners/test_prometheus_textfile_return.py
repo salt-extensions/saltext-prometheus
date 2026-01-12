@@ -231,11 +231,12 @@ def test_when_add_state_name_is_set_then_correct_output_should_be_in_correct_fil
     assert salt_prom == expected
 
 
-def test_prometheus_output_with_show_failed_state_option_and_abort_state_ids(
+def test_prometheus_output_with_show_failed_state_and_add_sls_name_options_and_abort_state_ids(
     job_ret, cache_dir, opts
 ):
     job_ret["return"]["cmd_|-echo includeme_|-echo includeme_|-run"]["result"] = False
     opts.update({"show_failed_states": True})
+    opts.update({"add_sls_name": True})
     promfile_lines = [
         "# HELP salt_procs Number of salt minion processes running",
         "# TYPE salt_procs gauge",
@@ -278,7 +279,7 @@ def test_prometheus_output_with_show_failed_state_option_and_abort_state_ids(
         f'salt_version_tagged{{salt_version="{salt.version.__version__}"}} 1.0',
         "# HELP salt_failed Information regarding state with failure condition",
         "# TYPE salt_failed gauge",
-        'salt_failed{state_comment="Command echo includeme run",state_id="echo includeme"} 1.0',
+        'salt_failed{sls="includeme",state_comment="Command echo includeme run",state_id="echo includeme"} 1.0',
     ]
 
     # Test one failed state
@@ -311,7 +312,7 @@ def test_prometheus_output_with_show_failed_state_option_and_abort_state_ids(
     promfile_lines[17] = "salt_states_success_pct 0.0"
     promfile_lines[20] = "salt_states_failure_pct 100.0"
     promfile_lines.append(
-        'salt_failed{state_comment="Command echo applyme run",state_id="echo applyme"} 1.0'
+        'salt_failed{sls="applyme",state_comment="Command echo applyme run",state_id="echo applyme"} 1.0'
     )
     expected = "\n".join(sorted(promfile_lines))
 
