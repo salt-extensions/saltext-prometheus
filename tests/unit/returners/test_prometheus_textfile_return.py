@@ -235,8 +235,7 @@ def test_prometheus_output_with_show_failed_state_and_add_sls_name_options_and_a
     job_ret, cache_dir, opts
 ):
     job_ret["return"]["cmd_|-echo includeme_|-echo includeme_|-run"]["result"] = False
-    opts.update({"show_failed_states": True})
-    opts.update({"add_sls_name": True})
+    opts.update({"show_failed_states": True, "add_sls_name": True})
     promfile_lines = [
         "# HELP salt_procs Number of salt minion processes running",
         "# TYPE salt_procs gauge",
