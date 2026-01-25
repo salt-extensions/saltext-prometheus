@@ -4,6 +4,13 @@ This project uses [Semantic Versioning](https://semver.org/) - MAJOR.MINOR.PATCH
 
 # Changelog
 
+## 2.2.0 (2026-01-25)
+
+
+### Added
+
+- Added new 'add_sls_name' option [#39](https://github.com/salt-extensions/saltext-prometheus/issues/39)
+
 ## 2.1.0 (2024-02-22)
 
 
