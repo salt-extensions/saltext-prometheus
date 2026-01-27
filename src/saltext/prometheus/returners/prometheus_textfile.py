@@ -146,12 +146,12 @@ from prometheus_client import write_to_textfile
 
 log = logging.getLogger(__name__)
 
-HAS_PSUTIL = False
 try:
     import psutil
 
     HAS_PSUTIL = True
 except (ImportError, ModuleNotFoundError):
+    HAS_PSUTIL = False
     log.warning("The psutil library is required for the salt_procs metric.")
 
 # Define the module's virtual name
