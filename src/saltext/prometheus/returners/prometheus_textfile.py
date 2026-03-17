@@ -1,6 +1,6 @@
 """
 Take data from salt and "return" it into a file formatted for Prometheus using
-the `Text Exposition Format <https://prometheus.io/docs/instrumenting/exposition_formats/#text-format-example>`_
+the `Text Exposition Format <https://prometheus.io/docs/instrumenting/exposition_formats/#example>`_
 which rolls up state success and failure data.
 
 .. versionadded:: 3005
