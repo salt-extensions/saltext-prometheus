@@ -35,7 +35,7 @@ Prometheus textfile module is a custom returner module.
     **What's a salt returner module?** A returner module defines the method and format in which the results of Salt execution commands are transmitted from the minions back to the master.
 
 
-This module is used to output a `Text Exposition Format <https://prometheus.io/docs/instrumenting/exposition_formats/#text-format-example>`_ file on the minion. The output includes salt specific metrics gathered from the minion. The output is formatted to a file that can be ingested by Prometheus infrastructure for monitoring purposes.
+This module is used to output a `Text Exposition Format <https://prometheus.io/docs/instrumenting/exposition_formats/#example>`_ file on the minion. The output includes salt specific metrics gathered from the minion. The output is formatted to a file that can be ingested by Prometheus infrastructure for monitoring purposes.
 
 To use the extension, you will need to provide a Salt state command and add a return flag pointed to the `prometheus_textfile` module. You can also utilize different configuration files to set the returner module.
 
