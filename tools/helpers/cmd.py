@@ -8,12 +8,11 @@ import platform
 import shlex
 import shutil
 import subprocess
-import sys
 from contextlib import contextmanager
+from dataclasses import KW_ONLY
 from dataclasses import dataclass
 from dataclasses import field
 from pathlib import Path
-from typing import Union
 
 
 class CommandNotFound(RuntimeError):
@@ -42,6 +41,8 @@ class ProcessResult:
             expected = [0]
         elif not isinstance(retcode, (list, tuple)):
             expected = [retcode]
+        else:
+            expected = retcode
         if self.retcode not in expected:
             raise ProcessExecutionError(self.argv, self.retcode, self.stdout, self.stderr)
 
@@ -124,6 +125,15 @@ class Local:
         """
         return self._env.get("PATH", "").split(os.pathsep)
 
+    def which(self, cmd):
+        """
+        Find `cmd` in $PATH.
+        """
+        res = shutil.which(cmd)
+        if not res:
+            raise CommandNotFound(cmd)
+        return Path(res)
+
     @contextmanager
     def cwd(self, path):
         """
@@ -131,11 +141,11 @@ class Local:
         """
         prev = Path(os.getcwd())
         new = prev / path
-        os.cwd(new)
+        os.chdir(new)
         try:
             yield
         finally:
-            os.cwd(prev)
+            os.chdir(prev)
 
     @contextmanager
     def env(self, **kwargs):
@@ -200,17 +210,32 @@ class Command:
     A command object, can be instantiated directly. Does not follow ``Local``.
     """
 
-    exe: Executable | str
+    _exe: Executable | str
     args: tuple[str, ...] = ()
+    _: KW_ONLY
+    lazy: bool = False
 
     def __post_init__(self):
-        if not isinstance(self.exe, Executable):
-            if not (full_exe := self._which(self.exe)):
-                raise CommandNotFound(self.exe)
-            object.__setattr__(self, "exe", Executable(full_exe))
+        if not self.lazy and not isinstance(self._exe, Executable):
+            self._init_exe()
+
+    def _init_exe(self) -> Executable:
+        ret_exe = self._exe
+        if not isinstance(ret_exe, Executable):
+            if not (full_exe := self._which(self._exe)):
+                raise CommandNotFound(self._exe)
+            ret_exe = Executable(full_exe)
+            object.__setattr__(self, "_exe", ret_exe)
+        return ret_exe
 
     def _which(self, exe):
         return shutil.which(exe)
+
+    @property
+    def exe(self) -> Executable:
+        if not isinstance(self._exe, Executable):
+            return self._init_exe()
+        return self._exe
 
     def _get_env(self, overrides=None):
         base = {k: str(v) for k, v in os.environ.items()}
@@ -229,9 +254,12 @@ class Command:
             git("commit", "-m", "testcommit")
 
         """
+        if not isinstance(self._exe, Executable):
+            # Fail early when the executable was not resolved during post_init
+            self._init_exe()
         if not isinstance(arg_or_args, tuple):
             arg_or_args = (arg_or_args,)
-        return type(self)(self.exe, tuple(*self.args, *arg_or_args), _local=self._local)
+        return type(self)(self.exe, (*self.args, *arg_or_args))
 
     def __call__(self, *args, **kwargs):
         """
@@ -240,7 +268,7 @@ class Command:
         return self.run(*args, **kwargs).stdout
 
     def __str__(self):
-        return shlex.join([self.exe] + list(self.args))
+        return shlex.join([str(self.exe)] + list(self.args))
 
     def __repr__(self):
         return f"Command<{self.exe}, {self.args!r}>"
@@ -258,7 +286,7 @@ class Command:
             retcode=proc.returncode,
             stdout=proc.stdout,
             stderr=proc.stderr,
-            argv=argv,
+            argv=tuple(argv),
         )
         if check:
             ret.check()
@@ -277,6 +305,22 @@ class LocalCommand(Command):
 
     _local: Local = field(kw_only=True, repr=False, default=local)
 
+    def __getitem__(self, arg_or_args):
+        """
+        Returns a subcommand with bound parameters.
+
+        Example:
+
+            git = Command("git")["-c", "commit.gpgsign=0"]
+            # ...
+            git("add", ".")
+            git("commit", "-m", "testcommit")
+
+        """
+        new = super().__getitem__(arg_or_args)
+        object.__setattr__(new, "_local", self._local)
+        return new
+
     def _which(self, exe):
         return shutil.which(exe, path=self._local._env.get("PATH", ""))
 
@@ -286,5 +330,5 @@ class LocalCommand(Command):
         return base
 
 
-# We must assume git is installed
-git = local["git"]
+# Don't crash when this file is just imported and git is absent.
+git = LocalCommand("git", lazy=True)
